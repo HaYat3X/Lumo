@@ -11,6 +11,7 @@ import {
   Settings,
   Bell,
   Blocks,
+  Bot,
 } from "lucide-react";
 
 type PageMeta = {
@@ -20,7 +21,7 @@ type PageMeta = {
 };
 
 const PAGE_META: Record<string, PageMeta> = {
-  "/chat": { title: "AI Chat", subtitle: "AIアシスタントとチャット", icon: MessageSquare },
+  "/chat": { title: "AI Assistant", subtitle: "AIアシスタントとチャット", icon: Bot },
   "/schedule": { title: "Schedule", subtitle: "週間スケジュール", icon: Calendar },
   "/tasks": { title: "Tasks", subtitle: "タスク管理", icon: CheckSquare },
   "/daily": { title: "Daily Plan", subtitle: "今日のプラン", icon: Clock },
@@ -66,10 +67,6 @@ export default function PageHeader() {
       {/* Right — date + notification */}
       <div className="page-header-right">
         <span className="page-header-date">{getToday()}</span>
-        <button className="page-header-bell" title="通知">
-          <Bell size={18} />
-          <span className="bell-dot" />
-        </button>
       </div>
     </header>
   );

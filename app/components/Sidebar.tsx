@@ -13,6 +13,7 @@ import {
   Settings,
   ChevronRight,
   Blocks,
+  Bot,
 } from "lucide-react";
 import clsx from "clsx";
 
@@ -31,9 +32,8 @@ type NavItem = {
 const MAIN_NAV: NavItem[] = [
   {
     href: "/chat",
-    icon: MessageSquare,
-    label: "AI Chat",
-    badge: "3",
+    icon: Bot,
+    label: "AI Assistant",
   },
   {
     href: "/schedule",
@@ -48,7 +48,6 @@ const MAIN_NAV: NavItem[] = [
     href: "/tasks",
     icon: CheckSquare,
     label: "Tasks",
-    badge: "5",
   },
   { href: "/daily", icon: Clock, label: "Daily Plan" },
   { href: "/scraps", icon: BookOpen, label: "Scraps" },
@@ -76,7 +75,7 @@ export default function Sidebar() {
     <aside className="sidebar">
       {/* ── Brand ── */}
       <div className="sidebar-brand">
-          <Link href="/chat" className="brand-icon">
+        <Link href="/chat" className="brand-icon">
           <Image
             src="/img/aether_icon_512.png"
             alt="Aether"
