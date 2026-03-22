@@ -96,4 +96,60 @@ export const TOOLS: Anthropic.Tool[] = [
       required: ["title", "date", "start_time", "end_time"],
     },
   },
+  {
+    name: "query_notion_database",
+    description: `Notionのデータベースからレコードを取得する。
+「今のタスク一覧」「進行中のタスクは？」「スクラップ見せて」「デイリープランは？」などデータ参照の意図を示した場合に使用する。
+利用可能なデータベース: タスク, デイリープラン, スクラップ, スプリント, ナレッジ, レビュー, OKR, KeyResults
+ステータスでフィルターしたい場合は status_filter に値を指定する（例: "進行中", "未着手", "完了"）。`,
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        database_name: {
+          type: "string",
+          enum: [
+            "タスク",
+            "デイリープラン",
+            "スクラップ",
+            "スプリント",
+            "ナレッジ",
+            "レビュー",
+            "OKR",
+            "KeyResults",
+          ],
+          description: "取得したいデータベース名",
+        },
+        status_filter: {
+          type: "string",
+          description:
+            "ステータスでフィルター（任意）。例: '未着手', '進行中', '完了', '保留'",
+        },
+        limit: {
+          type: "number",
+          description: "取得件数の上限（デフォルト20）",
+        },
+      },
+      required: ["database_name"],
+    },
+  },
+  {
+    name: "search_notion",
+    description: `Notionワークスペース全体をキーワード検索する。
+特定のDBではなく横断的に情報を探したい場合に使用する。
+「〇〇について書いたメモある？」「△△に関するページ探して」など。`,
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        query: {
+          type: "string",
+          description: "検索キーワード",
+        },
+        limit: {
+          type: "number",
+          description: "取得件数の上限（デフォルト10）",
+        },
+      },
+      required: ["query"],
+    },
+  },
 ];

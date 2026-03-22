@@ -1,4 +1,6 @@
 import { Client } from "@notionhq/client";
+import { getEvents, createEvent } from "./googleCalendar";
+import { queryNotionDatabase, searchNotion } from "./notionRenderer";
 
 /* ──────────────────────────────────────────
    Notion Client
@@ -69,8 +71,6 @@ export async function createTask(input: CreateTaskInput) {
   };
 }
 
-import { getEvents, createEvent } from "./googleCalendar";
-
 /* ──────────────────────────────────────────
    Tool Executor
    ────────────────────────────────────────── */
@@ -88,9 +88,6 @@ export async function executeTool(
         const result = await getEvents(
           toolInput as { date?: string; days?: number }
         );
-        
-        console.log("get_events result:", result);
-
         return JSON.stringify(result);
       }
       case "create_event": {
@@ -102,6 +99,22 @@ export async function executeTool(
             end_time: string;
             description?: string;
           }
+        );
+        return JSON.stringify(result);
+      }
+      case "query_notion_database": {
+        const result = await queryNotionDatabase(
+          toolInput as {
+            database_name: string;
+            status_filter?: string;
+            limit?: number;
+          }
+        );
+        return JSON.stringify(result);
+      }
+      case "search_notion": {
+        const result = await searchNotion(
+          toolInput as { query: string; limit?: number }
         );
         return JSON.stringify(result);
       }
