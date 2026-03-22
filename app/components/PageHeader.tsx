@@ -66,10 +66,6 @@ export default function PageHeader() {
       {/* Right — date + notification */}
       <div className="page-header-right">
         <span className="page-header-date">{getToday()}</span>
-        <button className="page-header-bell" title="通知">
-          <Bell size={18} />
-          <span className="bell-dot" />
-        </button>
       </div>
     </header>
   );

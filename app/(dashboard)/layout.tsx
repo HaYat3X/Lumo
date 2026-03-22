@@ -10,16 +10,21 @@ export default function DashboardLayout({
     <div className="flex h-dvh">
       <Sidebar />
 
-      {/* Main content area — offset by sidebar width */}
+      {/* Main content area */}
       <main
-        className="ml-[260px] flex-1 overflow-y-auto"
+        className="ml-[260px] flex flex-1 flex-col overflow-hidden"
         style={{
           background:
             "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(59,130,246,0.03) 0%, transparent 60%)",
         }}
       >
-        <div className="px-9 pt-7 pb-9">
+        {/* Fixed header */}
+        <div className="shrink-0 px-9 pt-7">
           <PageHeader />
+        </div>
+
+        {/* Scrollable content */}
+        <div className="flex-1 overflow-y-auto px-9 pb-9">
           {children}
         </div>
       </main>
