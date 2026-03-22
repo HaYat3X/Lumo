@@ -1,6 +1,7 @@
 import { Client } from "@notionhq/client";
 import { getEvents, createEvent } from "./googleCalendar";
 import { queryNotionDatabase, searchNotion } from "./notionRenderer";
+import { createDailyPlan } from "./dailyPlan";
 
 /* ──────────────────────────────────────────
    Notion Client
@@ -107,6 +108,7 @@ export async function executeTool(
           toolInput as {
             database_name: string;
             status_filter?: string;
+            sprint_status_filter?: string;
             limit?: number;
           }
         );
@@ -115,6 +117,22 @@ export async function executeTool(
       case "search_notion": {
         const result = await searchNotion(
           toolInput as { query: string; limit?: number }
+        );
+        return JSON.stringify(result);
+      }
+      case "create_daily_plan": {
+        const result = await createDailyPlan(
+          toolInput as {
+            items: Array<{
+              title: string;
+              start_time: string;
+              end_time: string;
+              memo?: string;
+              target_progress?: number;
+              related_task_id?: string;
+            }>;
+            date?: string;
+          }
         );
         return JSON.stringify(result);
       }

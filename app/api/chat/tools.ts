@@ -101,7 +101,7 @@ export const TOOLS: Anthropic.Tool[] = [
     description: `Notionのデータベースからレコードを取得する。
 「今のタスク一覧」「進行中のタスクは？」「スクラップ見せて」「デイリープランは？」などデータ参照の意図を示した場合に使用する。
 利用可能なデータベース: タスク, デイリープラン, スクラップ, スプリント, ナレッジ, レビュー, OKR, KeyResults
-ステータスでフィルターしたい場合は status_filter に値を指定する（例: "進行中", "未着手", "完了"）。`,
+ステータスでフィルターしたい場合は status_filter、スプリントステータスでフィルターしたい場合は sprint_status_filter を指定。`,
     input_schema: {
       type: "object" as const,
       properties: {
@@ -123,6 +123,11 @@ export const TOOLS: Anthropic.Tool[] = [
           type: "string",
           description:
             "ステータスでフィルター（任意）。例: '未着手', '進行中', '完了', '保留'",
+        },
+        sprint_status_filter: {
+          type: "string",
+          description:
+            "スプリントステータスでフィルター（任意・タスクDBのみ有効）。例: '進行中'。タスクDBの「取得用：スプリントステータス」formula列でフィルターする。",
         },
         limit: {
           type: "number",
@@ -150,6 +155,68 @@ export const TOOLS: Anthropic.Tool[] = [
         },
       },
       required: ["query"],
+    },
+  },
+  {
+    name: "create_daily_plan",
+    description: `Notionのデイリープランデータベースに今日の作業予定を一括登録する。
+「デイリープランを作って」「今日の予定を立てて」などの意図で使用する。
+
+【重要な手順】このツールを使う前に、必ず以下の2つを先に実行すること：
+1. get_events で今日のGoogleカレンダー予定を取得
+2. query_notion_database で database_name="タスク", sprint_status_filter="進行中" でタスクを取得
+
+上記2つの結果を元に以下のルールでプランを組む：
+- Googleカレンダーの予定（MTG等）はその時間帯にそのまま配置
+- タスクは期限が近い順・優先度が高い順に配置
+- 見積時間(h)がある場合はその時間分を確保。なければ1時間を想定
+- 12:00-13:00 は昼休憩
+- 作業の開始は9:00、終了は18:00を目安
+- タスクのidをrelated_task_idに設定して、Notionのリレーションを紐づける
+各作業は items 配列で渡す。`,
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        items: {
+          type: "array",
+          description: "デイリープランの各作業項目の配列",
+          items: {
+            type: "object",
+            properties: {
+              title: {
+                type: "string",
+                description: "作業名（必須）",
+              },
+              start_time: {
+                type: "string",
+                description: "開始時刻 HH:mm（必須）",
+              },
+              end_time: {
+                type: "string",
+                description: "終了時刻 HH:mm（必須）",
+              },
+              memo: {
+                type: "string",
+                description: "メモ（任意）",
+              },
+              target_progress: {
+                type: "number",
+                description: "目標進捗率 0.0〜1.0（任意）",
+              },
+              related_task_id: {
+                type: "string",
+                description: "関連タスクのNotion page ID（任意）",
+              },
+            },
+            required: ["title", "start_time", "end_time"],
+          },
+        },
+        date: {
+          type: "string",
+          description: "日付 YYYY-MM-DD。省略時は今日。",
+        },
+      },
+      required: ["items"],
     },
   },
 ];

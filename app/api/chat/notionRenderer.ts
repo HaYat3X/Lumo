@@ -92,6 +92,7 @@ function extractProp(prop: any): string | number | boolean | null {
 type QueryInput = {
   database_name: string;
   status_filter?: string;
+  sprint_status_filter?: string;
   limit?: number;
 };
 
@@ -110,11 +111,31 @@ export async function queryNotionDatabase(input: QueryInput) {
     page_size: input.limit ?? 20,
   };
 
+  // フィルター構築
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const filters: any[] = [];
+
   if (input.status_filter) {
-    params.filter = {
+    filters.push({
       property: "ステータス",
       status: { equals: input.status_filter },
-    };
+    });
+  }
+
+  if (input.sprint_status_filter) {
+    // 「取得用：スプリントステータス」はformula型
+    filters.push({
+      property: "取得用：スプリントステータス",
+      formula: {
+        string: { equals: input.sprint_status_filter },
+      },
+    });
+  }
+
+  if (filters.length === 1) {
+    params.filter = filters[0];
+  } else if (filters.length > 1) {
+    params.filter = { and: filters };
   }
 
   const res = await notion.dataSources.query(params);
