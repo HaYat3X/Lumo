@@ -69,6 +69,8 @@ export async function createTask(input: CreateTaskInput) {
   };
 }
 
+import { getEvents, createEvent } from "./googleCalendar";
+
 /* ──────────────────────────────────────────
    Tool Executor
    ────────────────────────────────────────── */
@@ -80,6 +82,27 @@ export async function executeTool(
     switch (toolName) {
       case "create_task": {
         const result = await createTask(toolInput as CreateTaskInput);
+        return JSON.stringify(result);
+      }
+      case "get_events": {
+        const result = await getEvents(
+          toolInput as { date?: string; days?: number }
+        );
+        
+        console.log("get_events result:", result);
+
+        return JSON.stringify(result);
+      }
+      case "create_event": {
+        const result = await createEvent(
+          toolInput as {
+            title: string;
+            date: string;
+            start_time: string;
+            end_time: string;
+            description?: string;
+          }
+        );
         return JSON.stringify(result);
       }
       default:
