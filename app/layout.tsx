@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Outfit, JetBrains_Mono, Noto_Sans_JP } from "next/font/google";
-import "./globals.css";
+import "./globals.css"
 
 const outfit = Outfit({
   subsets: ["latin"],
