@@ -14,7 +14,6 @@ import {
   ListChecks,
   RotateCcw,
 } from "lucide-react";
-import { Roboto } from "next/font/google";
 
 /* ──────────────────────────────────────────
    Types
@@ -342,83 +341,6 @@ export default function ChatPage() {
           </div>
         </div>
       </div>
-
-      {/* ════════ Right Sidebar ════════ */}
-      <aside className="chat-sidebar">
-        <div className="chat-sidebar-card">
-          <h3 className="chat-sidebar-title">Next Up</h3>
-          <div className="chat-sidebar-list">
-            {NEXT_UP.map((item) => (
-              <div key={item.time} className="sidebar-schedule-item">
-                <span
-                  className="sidebar-schedule-dot"
-                  style={{
-                    background: item.color,
-                    boxShadow: `0 0 6px ${item.color}40`,
-                  }}
-                />
-                <span className="sidebar-schedule-time">{item.time}</span>
-                <span className="sidebar-schedule-title">{item.title}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="chat-sidebar-card">
-          <h3 className="chat-sidebar-title">Today&apos;s Tasks</h3>
-          <div className="chat-sidebar-list">
-            {TODAY_TASKS.map((task) => (
-              <div key={task.title} className="sidebar-task-item">
-                <span
-                  className={`sidebar-task-check ${task.done ? "done" : ""}`}
-                >
-                  {task.done && (
-                    <svg
-                      width="10"
-                      height="10"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                  )}
-                </span>
-                <span
-                  className={`sidebar-task-title ${task.done ? "done" : ""}`}
-                >
-                  {task.title}
-                </span>
-                <span
-                  className="sidebar-task-dot"
-                  style={{ background: PRIORITY_COLORS[task.priority] }}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="chat-sidebar-card">
-          <h3 className="chat-sidebar-title">Connections</h3>
-          <div className="chat-sidebar-list">
-            <div className="sidebar-connection">
-              <span className="connection-dot connected" />
-              <span className="connection-label">Google Calendar</span>
-            </div>
-            <div className="sidebar-connection">
-              <span className="connection-dot connected" />
-              <span className="connection-label">Notion</span>
-            </div>
-            <div className="sidebar-connection">
-              <span className="connection-dot disconnected" />
-              <span className="connection-label">LINE Bot</span>
-            </div>
-          </div>
-        </div>
-      </aside>
     </div>
   );
 }
