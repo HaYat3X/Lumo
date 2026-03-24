@@ -1,5 +1,5 @@
 "use client";
-
+// 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -18,6 +18,7 @@ import {
   Flag,
   CalendarCheck,
   Moon,
+  TrendingUp
 } from "lucide-react";
 import clsx from "clsx";
 import { useTheme } from "./ThemeProvider";
@@ -47,6 +48,7 @@ const MAIN_NAV: NavItem[] = [
   },
   { href: "/daily", icon: Clock, label: "Daily Plan" },
   { href: "/scraps", icon: BookOpen, label: "Scraps" },
+  { href: "/trends", icon: TrendingUp, label: "Trend" },
 ];
 
 const SERVICE_NAV: NavItem[] = [
@@ -104,19 +106,15 @@ export default function Sidebar() {
       <div className="sidebar-brand">
         <Link href="/chat" className="brand-icon">
           <Image
-            src={
-              theme === "dark"
-                ? "/aether_icon_dark_512.png" // ダークモード: 白ロゴ
-                : "/aether_icon_light_512.png" // ライトモード: 黒ロゴ
-            }
-            alt="Aether"
+            src="/lumo_icon_512.png"
+            alt="Lumo"
             width={36}
             height={36}
             className="rounded-[10px]"
           />
         </Link>
         <Link href="/chat" className="brand-name">
-          Aether
+          Lumo
         </Link>
       </div>
 
@@ -124,15 +122,6 @@ export default function Sidebar() {
       <NavSection
         label="Menu"
         items={MAIN_NAV}
-        isActive={isActive}
-        expanded={expanded}
-        onToggle={toggleExpand}
-      />
-
-      {/* ── System Nav ── */}
-      <NavSection
-        label="System"
-        items={SYSTEM_NAV}
         isActive={isActive}
         expanded={expanded}
         onToggle={toggleExpand}
@@ -147,25 +136,26 @@ export default function Sidebar() {
         onToggle={toggleExpand}
       />
 
+      {/* ── System Nav ── */}
+      <NavSection
+        label="System"
+        items={SYSTEM_NAV}
+        isActive={isActive}
+        expanded={expanded}
+        onToggle={toggleExpand}
+      />
+
       {/* Spacer */}
       <div className="flex-1" />
 
       {/* ── Divider ── */}
       <div className="sidebar-divider" />
 
-      {/* ── User ── */}
-      <div className="nav-section">
-        <button className="nav-item" onClick={toggle}>
-          {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-          <span className="nav-label">
-            {theme === "dark" ? "ライトモード" : "ダークモード"}
-          </span>
-        </button>
-      </div>
       <div className="sidebar-user">
         <div className="user-avatar">H</div>
         <div className="user-info">
           <div className="user-name">Hayate Takeda</div>
+          <div className="user-email">hayatetakeda48@gmail.com</div>
         </div>
         <div className="user-status" />
       </div>

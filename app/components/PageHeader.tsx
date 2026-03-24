@@ -9,9 +9,9 @@ import {
   Clock,
   BookOpen,
   Settings,
-  Bell,
   Blocks,
   Bot,
+  Bell,
 } from "lucide-react";
 
 type PageMeta = {
@@ -40,6 +40,9 @@ function getToday() {
   return `${weekdays[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}`;
 }
 
+// 通知件数 (実際の実装では API から取得)
+const NOTIFICATION_COUNT = 3;
+
 export default function PageHeader() {
   const pathname = usePathname();
   const page = PAGE_META[pathname ?? ""] ?? {
@@ -64,9 +67,16 @@ export default function PageHeader() {
         </div>
       </div>
 
-      {/* Right — date + notification */}
+      {/* Right — date + notification bell */}
       <div className="page-header-right">
         <span className="page-header-date">{getToday()}</span>
+
+        <button className="page-header-bell" title="通知">
+          <Bell size={16} />
+          {NOTIFICATION_COUNT > 0 && (
+            <span className="bell-dot" />
+          )}
+        </button>
       </div>
     </header>
   );
