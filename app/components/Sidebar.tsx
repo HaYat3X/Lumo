@@ -151,15 +151,6 @@ export default function Sidebar() {
       {/* ── Divider ── */}
       <div className="sidebar-divider" />
 
-      {/* ── User ── */}
-      <div className="nav-section">
-        <button className="nav-item" onClick={toggle}>
-          {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-          <span className="nav-label">
-            {theme === "dark" ? "ライトモード" : "ダークモード"}
-          </span>
-        </button>
-      </div>
       <div className="sidebar-user">
         <div className="user-avatar">H</div>
         <div className="user-info">
