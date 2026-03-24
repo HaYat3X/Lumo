@@ -127,19 +127,19 @@ export default function Sidebar() {
         onToggle={toggleExpand}
       />
 
-      {/* ── System Nav ── */}
+      {/* ── Service Nav ── */}
       <NavSection
-        label="System"
-        items={SYSTEM_NAV}
+        label="Other Service"
+        items={SERVICE_NAV}
         isActive={isActive}
         expanded={expanded}
         onToggle={toggleExpand}
       />
 
-      {/* ── Service Nav ── */}
+      {/* ── System Nav ── */}
       <NavSection
-        label="Other Service"
-        items={SERVICE_NAV}
+        label="System"
+        items={SYSTEM_NAV}
         isActive={isActive}
         expanded={expanded}
         onToggle={toggleExpand}
