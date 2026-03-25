@@ -1,0 +1,335 @@
+/* ── ページ全体 ── */
+.settings-root {
+  min-height: 100%;
+  padding: 10px 300px;
+  background: var(--color-bg-base, #f5f3ef);
+  font-family: "Noto Sans JP", sans-serif;
+}
+
+/* ── ヘッダー ── */
+.settings-header {
+  margin-bottom: 40px;
+}
+.settings-header-icon-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.settings-header-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(204, 85, 34, 0.08);
+  border: 0.5px solid rgba(204, 85, 34, 0.2);
+  color: var(--color-accent, #cc5522);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.settings-title {
+  font-family: "Outfit", sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-text-primary, #1a1714);
+  letter-spacing: -0.3px;
+  margin: 0;
+}
+.settings-subtitle {
+  font-size: 13.5px;
+  color: var(--color-text-muted, #8a837a);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ── セクション ── */
+.settings-section-label {
+  font-family: "Outfit", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-muted, #8a837a);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+/* ── カード ── */
+.settings-card {
+  background: var(--color-bg-surface, #ffffff);
+  border: 0.5px solid var(--color-glass-border, rgba(0, 0, 0, 0.06));
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 12px;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 4px 12px rgba(0, 0, 0, 0.02);
+  transition: box-shadow 0.2s;
+}
+.settings-card:hover {
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.06),
+    0 6px 16px rgba(0, 0, 0, 0.04);
+}
+
+/* ── カードヘッダー ── */
+.settings-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.settings-card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.settings-card-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(204, 85, 34, 0.06);
+  border: 0.5px solid rgba(204, 85, 34, 0.15);
+  color: var(--color-accent, #cc5522);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.settings-card-label {
+  font-family: "Outfit", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text-primary, #1a1714);
+  margin: 0 0 2px;
+}
+.settings-card-desc {
+  font-size: 12px;
+  color: var(--color-text-muted, #8a837a);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── ステータスバッジ ── */
+.settings-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+.settings-badge-set {
+  background: rgba(45, 130, 89, 0.1);
+  color: var(--color-green, #2d8259);
+  border: 0.5px solid rgba(45, 130, 89, 0.2);
+}
+.settings-badge-unset {
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--color-text-muted, #8a837a);
+  border: 0.5px solid rgba(0, 0, 0, 0.07);
+}
+
+/* ── インプットエリア ── */
+.settings-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.settings-input-wrap {
+  flex: 1;
+  position: relative;
+}
+.settings-input {
+  width: 100%;
+  height: 40px;
+  padding: 0 40px 0 12px;
+  background: var(--color-bg-input, #f5f3ef);
+  border: 0.5px solid var(--color-border, rgba(0, 0, 0, 0.07));
+  border-radius: 8px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  color: var(--color-text-secondary, #4a4440);
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  box-sizing: border-box;
+}
+.settings-input::placeholder {
+  color: var(--color-text-dim, #b8b0a8);
+  font-family: "Noto Sans JP", sans-serif;
+}
+.settings-input:focus {
+  border-color: rgba(204, 85, 34, 0.25);
+  box-shadow: 0 0 0 3px rgba(204, 85, 34, 0.06);
+}
+.settings-input-eye {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--color-text-dim, #b8b0a8);
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+.settings-input-eye:hover {
+  color: var(--color-text-muted, #8a837a);
+}
+
+/* ── ボタン類 ── */
+.settings-btn-save {
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 8px;
+  border: none;
+  font-family: "Noto Sans JP", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.15s,
+    box-shadow 0.15s,
+    opacity 0.15s;
+}
+.settings-btn-save-active {
+  background: var(--color-accent, #cc5522);
+  color: white;
+  box-shadow: 0 2px 8px rgba(204, 85, 34, 0.2);
+}
+.settings-btn-save-active:hover {
+  background: var(--color-accent-bright, #b84a1a);
+}
+.settings-btn-save-disabled {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--color-text-dim, #b8b0a8);
+  cursor: not-allowed;
+}
+.settings-btn-save-saving {
+  background: rgba(204, 85, 34, 0.4);
+  color: white;
+  cursor: not-allowed;
+}
+.settings-btn-save-saved {
+  background: rgba(45, 130, 89, 0.12);
+  color: var(--color-green, #2d8259);
+  cursor: default;
+}
+
+/* ── フッターアクション ── */
+.settings-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+.settings-docs-link {
+  font-size: 11.5px;
+  color: var(--color-text-muted, #8a837a);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.15s;
+}
+.settings-docs-link:hover {
+  color: var(--color-accent, #cc5522);
+}
+.settings-btn-delete {
+  font-size: 11.5px;
+  color: var(--color-text-muted, #8a837a);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition:
+    color 0.15s,
+    background 0.15s;
+  font-family: "Noto Sans JP", sans-serif;
+}
+.settings-btn-delete:hover {
+  color: var(--color-red, #b83030);
+  background: rgba(184, 48, 48, 0.06);
+}
+
+/* ── 注意書き ── */
+.settings-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 14px;
+  background: rgba(204, 85, 34, 0.04);
+  border: 0.5px solid rgba(204, 85, 34, 0.12);
+  border-radius: 10px;
+  margin-top: 28px;
+}
+.settings-notice-icon {
+  color: var(--color-accent-dim, #e06030);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.settings-notice-text {
+  font-size: 12px;
+  color: var(--color-text-secondary, #4a4440);
+  line-height: 1.6;
+  margin: 0;
+}
+.settings-notice-text strong {
+  color: var(--color-text-primary, #1a1714);
+  font-weight: 600;
+}
+
+/* ── ローディング ── */
+.settings-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+.settings-loading-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent, #cc5522);
+  animation: pulse-dot 1.2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* ── フェードイン ── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.settings-header {
+  animation: fadeUp 0.3s ease both;
+}
+.settings-card:nth-child(1) {
+  animation: fadeUp 0.35s 0.05s ease both;
+}
+.settings-card:nth-child(2) {
+  animation: fadeUp 0.35s 0.1s ease both;
+}
+.settings-notice {
+  animation: fadeUp 0.35s 0.15s ease both;
+}

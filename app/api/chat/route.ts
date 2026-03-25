@@ -107,12 +107,12 @@ function createSSEStream() {
     },
     sendText(text: string) {
       controller?.enqueue(
-        encoder.encode(`data: ${JSON.stringify({ text })}\n\n`)
+        encoder.encode(`data: ${JSON.stringify({ text })}\n\n`),
       );
     },
     sendStatus(status: string) {
       controller?.enqueue(
-        encoder.encode(`data: ${JSON.stringify({ status })}\n\n`)
+        encoder.encode(`data: ${JSON.stringify({ status })}\n\n`),
       );
     },
     close() {
@@ -121,7 +121,7 @@ function createSSEStream() {
     },
     error(msg: string) {
       controller?.enqueue(
-        encoder.encode(`data: ${JSON.stringify({ error: msg })}\n\n`)
+        encoder.encode(`data: ${JSON.stringify({ error: msg })}\n\n`),
       );
       controller?.close();
     },
@@ -136,10 +136,7 @@ export async function POST(req: NextRequest) {
     const { messages } = await req.json();
 
     if (!messages || !Array.isArray(messages)) {
-      return Response.json(
-        { error: "messages is required" },
-        { status: 400 }
-      );
+      return Response.json({ error: "messages is required" }, { status: 400 });
     }
 
     const trimmed = messages.slice(-MAX_CONTEXT_MESSAGES);
@@ -166,9 +163,7 @@ export async function POST(req: NextRequest) {
         // ── Step 2: Tool use loop ──
         // Claude may request tool use multiple rounds.
         // Each round, we accumulate messages so context is preserved.
-        const conversationMessages: Anthropic.MessageParam[] = [
-          ...apiMessages,
-        ];
+        const conversationMessages: Anthropic.MessageParam[] = [...apiMessages];
 
         while (response.stop_reason === "tool_use") {
           const assistantContent = response.content;
@@ -188,12 +183,14 @@ export async function POST(req: NextRequest) {
 
           // Find tool_use blocks
           const toolUseBlocks = assistantContent.filter(
-            (b): b is Anthropic.ToolUseBlock & {
+            (
+              b,
+            ): b is Anthropic.ToolUseBlock & {
               type: "tool_use";
               id: string;
               name: string;
               input: Record<string, unknown>;
-            } => b.type === "tool_use"
+            } => b.type === "tool_use",
           );
 
           // Execute each tool
@@ -203,7 +200,7 @@ export async function POST(req: NextRequest) {
 
             const result = await executeTool(
               toolUse.name,
-              toolUse.input as Record<string, unknown>
+              toolUse.input as Record<string, unknown>,
             );
 
             toolResults.push({
