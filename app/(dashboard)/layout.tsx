@@ -1,4 +1,5 @@
-import Sidebar from "../components/Sidebar";
+// import Sidebar from "../components/Sidebar";
+import Sidebar from "../components/feature/Sidebar";
 import PageHeader from "../components/PageHeader";
 import { auth } from "@/auth";
 
