@@ -212,3 +212,11 @@
 .login-footer-note a:hover {
   text-decoration: underline;
 }
+
+.login-error {
+  font-size: 12px;
+  color: var(--color-accent); /* テラコッタオレンジ */
+  text-align: center;
+  margin-bottom: 16px;
+  animation: loginCardIn 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}

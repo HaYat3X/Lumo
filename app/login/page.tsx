@@ -3,8 +3,12 @@
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import "./main.css";
+import { useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error");
+
   return (
     <div className="login-page">
       <div className="login-card">
@@ -51,6 +55,10 @@ export default function LoginPage() {
           </svg>
           Google でログイン
         </button>
+
+        {error === "unauthorized" && (
+          <p className="login-error">このアカウントはご利用いただけません。</p>
+        )}
 
         {/* ── フッターノート ── */}
         <p className="login-footer-note">
