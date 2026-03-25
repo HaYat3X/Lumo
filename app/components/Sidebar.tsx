@@ -86,7 +86,6 @@ const SERVICE_NAV: NavItem[] = [
 ];
 
 const SYSTEM_NAV: NavItem[] = [
-  { href: "/integrations", icon: Blocks, label: "Integrations" },
   { href: "/settings", icon: Settings, label: "Settings" },
 ];
 
