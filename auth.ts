@@ -7,4 +7,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
     signIn: "/login",
   },
+  callbacks: {
+    async signIn({ user }) {
+      const allowed =
+        process.env.ALLOWED_EMAILS?.split(",").map((e) => e.trim()) ?? [];
+      if (allowed.includes(user.email ?? "")) return true;
+      return "/login?error=unauthorized"; // ← カスタムエラーページへ
+    },
+  },
 });
