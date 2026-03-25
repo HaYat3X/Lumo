@@ -1,9 +1,10 @@
 "use client";
-// 
+//
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { signOut } from "next-auth/react"; // ← クライアント用に変更
 import {
   CheckSquare,
   Clock,
@@ -17,11 +18,10 @@ import {
   Target,
   Flag,
   CalendarCheck,
-  Moon,
-  TrendingUp
+  LogOut,
+  TrendingUp,
 } from "lucide-react";
 import clsx from "clsx";
-import { useTheme } from "./ThemeProvider";
 
 /* ──────────────────────────────────────────
    Nav definitions
@@ -33,6 +33,12 @@ type NavItem = {
   label: string;
   badge?: string;
   children?: NavChild[];
+};
+// 型定義を追加
+type SidebarUser = {
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
 };
 
 const MAIN_NAV: NavItem[] = [
@@ -80,14 +86,13 @@ const SERVICE_NAV: NavItem[] = [
 ];
 
 const SYSTEM_NAV: NavItem[] = [
-  { href: "/integrations", icon: Blocks, label: "Integrations" },
   { href: "/settings", icon: Settings, label: "Settings" },
 ];
 
 /* ──────────────────────────────────────────
    Component
    ────────────────────────────────────────── */
-export default function Sidebar() {
+export default function Sidebar({ user }: { user: SidebarUser | null }) {
   const pathname = usePathname();
   const [expanded, setExpanded] = useState<string | null>(null);
 
@@ -97,16 +102,13 @@ export default function Sidebar() {
   const toggleExpand = (href: string) =>
     setExpanded((prev) => (prev === href ? null : href));
 
-  // Sidebar コンポーネント内
-  const { theme, toggle } = useTheme();
-
   return (
     <aside className="sidebar">
       {/* ── Brand ── */}
       <div className="sidebar-brand">
         <Link href="/chat" className="brand-icon">
           <Image
-            src="/lumo_icon_512.png"
+            src="/login.png"
             alt="Lumo"
             width={36}
             height={36}
@@ -152,12 +154,27 @@ export default function Sidebar() {
       <div className="sidebar-divider" />
 
       <div className="sidebar-user">
-        <div className="user-avatar">H</div>
+        {/* <div className="user-avatar">H</div> */}
+        {user?.image ? (
+          <img
+            src={user.image}
+            alt={user.name ?? ""}
+            style={{
+              width: 34,
+              height: 34,
+              borderRadius: "50%",
+              objectFit: "cover",
+              flexShrink: 0,
+            }}
+          />
+        ) : (
+          <div className="user-avatar">{user?.name?.[0] ?? "?"}</div>
+        )}
         <div className="user-info">
-          <div className="user-name">Hayate Takeda</div>
-          <div className="user-email">hayatetakeda48@gmail.com</div>
+          <div className="user-name">{user?.name ?? "Unknown"}</div>
+          <div className="user-email">{user?.email ?? ""}</div>
         </div>
-        <div className="user-status" />
+        <LogOut size={16} onClick={() => signOut({ callbackUrl: "/login" })} />
       </div>
     </aside>
   );
