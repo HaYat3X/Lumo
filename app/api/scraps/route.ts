@@ -44,7 +44,7 @@ export async function GET() {
    ────────────────────────────────────────── */
 export async function POST(req: NextRequest) {
     try {
-        const { title, content, tags } = await req.json();
+        const { title, content, category } = await req.json();
 
         if (!title || !content) {
             return Response.json(
@@ -56,12 +56,11 @@ export async function POST(req: NextRequest) {
         const result = await createScrap({
             title,
             content,
-            tags: tags ?? [],
+            category: category ?? null,
         });
 
         return Response.json(
             {
-                success: true,
                 ...result,
             },
             { status: 201 }
