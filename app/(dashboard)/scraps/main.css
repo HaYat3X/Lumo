@@ -9,13 +9,13 @@
   flex-direction: column;
   gap: 0;
   height: 100%;
+  overflow-y: auto;
 }
 
 .scraps-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-
   gap: 16px;
   flex-wrap: wrap;
 }
@@ -111,7 +111,6 @@
 
 .scraps-content {
   flex: 1;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
 }
@@ -312,7 +311,7 @@
   opacity: 0;
 }
 
-.scraps-card-link {
+.scraps-card:hover .scraps-card-link {
   opacity: 1;
 }
 
@@ -388,6 +387,7 @@
   color: #264a72;
 }
 
+
 .scraps-card-date {
   font-family: var(--font-mono), "JetBrains Mono", monospace;
   font-size: 11px;
@@ -457,6 +457,7 @@
   white-space: nowrap;
 }
 
+
 .scraps-card-category.badge-idea {
   background: #d1910041;
   color: #655121;
@@ -483,12 +484,12 @@
 }
 
 /* スクロールバー非表示 */
-.scraps-content::-webkit-scrollbar {
+.scraps-container::-webkit-scrollbar {
   width: 0;
   display: none;
 }
 
-.scraps-content {
+.scraps-container {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
