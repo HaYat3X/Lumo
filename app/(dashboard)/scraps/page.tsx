@@ -1,63 +1,264 @@
-import { GlassCard, Badge } from "@/app/components/ui";
-import { Plus } from "lucide-react";
+"use client";
 
-const MOCK_SCRAPS = [
-  {
-    title: "LLMのファインチューニング手法",
-    body: "LoRAとQLoRAの違いについて調査。メモリ効率の面でQLoRAが有利...",
-    tags: ["AI", "技術メモ"],
-    date: "2025-03-20",
-  },
-  {
-    title: "新規プロジェクトのアイデア",
-    body: "社内ナレッジ検索をRAGで構築する案。既存のConfluenceデータを活用...",
-    tags: ["アイデア", "プロジェクト"],
-    date: "2025-03-19",
-  },
-  {
-    title: "読書メモ: チームトポロジー",
-    body: "ストリームアラインドチームの考え方が参考になった。認知負荷の軽減...",
-    tags: ["読書", "組織"],
-    date: "2025-03-18",
-  },
+import { useState, useEffect, useCallback, useMemo } from "react";
+import "./main.css";
+import { Loader2, AlertCircle, BookOpen, ExternalLink } from "lucide-react";
+import { Lightbulb, Sparkles, TowelRack, Search, BadgeQuestionMark, MessageCircleMore, RefreshCw } from "lucide-react";
+
+/* ──────────────────────────────────────────
+   Types
+   ────────────────────────────────────────── */
+type ScrapItem = {
+  id: string;
+  title: string;
+  overview: string;
+  category?: string | null;
+  status?: string | null;
+  createdAt: string;
+  url?: string | null;
+};
+
+type ScrapCategory = "アイデア" | "気づき" | "調べたいこと" | "モヤモヤ" | "ひとこと";
+
+interface CategoryConfig {
+  label: string;
+  badgeClass: string;
+  icon: React.ElementType;
+}
+
+const CATEGORY_CONFIG: Record<ScrapCategory, CategoryConfig> = {
+  "アイデア": { label: "アイデア", badgeClass: "badge-idea", icon: Lightbulb },
+  "気づき": { label: "気づき", badgeClass: "badge-insight", icon: Sparkles },
+  "調べたいこと": { label: "調べたいこと", badgeClass: "badge-research", icon: Search },
+  "モヤモヤ": { label: "モヤモヤ", badgeClass: "badge-unclear", icon: BadgeQuestionMark },
+  "ひとこと": { label: "ひとこと", badgeClass: "badge-note", icon: MessageCircleMore },
+};
+
+const ALL_CATEGORIES: ScrapCategory[] = [
+  "アイデア",
+  "気づき",
+  "調べたいこと",
+  "モヤモヤ",
+  "ひとこと",
 ];
 
+/* ──────────────────────────────────────────
+   Component
+   ────────────────────────────────────────── */
 export default function ScrapsPage() {
-  return (
-    <div className="stagger">
-      {/* New scrap button */}
-      <button className="animate-fade-up mb-5 flex items-center gap-2 rounded-xl border border-dashed border-white/10 px-4 py-3 text-sm text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-accent)]/30 hover:text-[var(--color-accent-light)]">
-        <Plus size={16} />
-        新しいスクラップを作成
-      </button>
+  const [scraps, setScraps] = useState<ScrapItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
-      {/* Scrap cards grid */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
-        {MOCK_SCRAPS.map((scrap) => (
-          <GlassCard
-            key={scrap.title}
-            className="animate-fade-up cursor-pointer transition-all hover:border-white/10 hover:bg-white/[0.04]"
-          >
-            <h3 className="mb-2 text-sm font-semibold text-[var(--color-text-primary)]">
-              {scrap.title}
-            </h3>
-            <p className="mb-3 line-clamp-2 text-xs leading-relaxed text-[var(--color-text-muted)]">
-              {scrap.body}
-            </p>
-            <div className="flex items-center justify-between">
-              <div className="flex gap-1.5">
-                {scrap.tags.map((tag) => (
-                  <Badge key={tag} variant="accent">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-              <span className="font-[var(--font-mono)] text-[10px] text-[var(--color-text-muted)]">
-                {scrap.date}
-              </span>
+  const fetchScraps = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/scraps", {
+        cache: "no-store",
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: "API error" }));
+        throw new Error(err.error || `HTTP ${res.status}`);
+      }
+      const data = await res.json();
+      setScraps(data.items ?? []);
+    } catch (err) {
+      console.error("[Scraps] fetch error:", err);
+      setError((err as Error).message);
+      setScraps([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchScraps();
+  }, [fetchScraps]);
+
+  // フィルタリング
+  const filteredScraps = useMemo(() => {
+    if (!activeCategory) return scraps;
+    return scraps.filter((s) => s.category === activeCategory);
+  }, [scraps, activeCategory]);
+
+  // タブ用のカウント
+  const categoryCounts = useMemo(() => {
+    const counts: Record<ScrapCategory, number> = {} as Record<ScrapCategory, number>;
+    ALL_CATEGORIES.forEach((cat) => {
+      counts[cat] = scraps.filter((s) => s.category === cat).length;
+    });
+    return counts;
+  }, [scraps]);
+
+  const formatDate = (isoDate: string): string => {
+    const date = new Date(isoDate);
+    return date.toISOString().split("T")[0];
+  };
+
+  const getStatusClass = (status?: string | null): string => {
+    if (!status) return "";
+
+    const normalized = status.toLowerCase();
+
+    if (normalized === "inbox") return "status-inbox";
+    if (normalized === "ボツ") return "status-rejected";
+    if (normalized === "ナレッジ化") return "status-documented";
+    if (normalized === "タスク化") return "status-tasked";
+
+    return "";
+  };
+
+  const handleOpenLink = (url: string | null | undefined) => {
+    if (url) {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+  };
+
+  return (
+    <div className="scraps-container">
+      {/* ── Header ── */}
+      <div className="scraps-header animate-fade-up">
+        {/* ── Tabs ── */}
+        {!loading && !error && (
+          <div className="scraps-filters animate-fade-up">
+            <button
+              className={`scraps-filter-btn${activeCategory === null ? " active" : ""}`}
+              onClick={() => setActiveCategory(null)}
+            >
+              <TowelRack size={12} />
+              すべて
+              <span className="scraps-filter-count">{scraps.length}</span>
+            </button>
+
+            {ALL_CATEGORIES.map((cat) => {
+              const cfg = CATEGORY_CONFIG[cat];
+              const Icon = cfg.icon;
+              const count = categoryCounts[cat] ?? 0;
+              return (
+                <button
+                  key={cat}
+                  className={`scraps-filter-btn${activeCategory === cat ? " active" : ""}`}
+                  onClick={() => setActiveCategory(cat)}
+                >
+                  <Icon size={12} />
+                  {cfg.label}
+                  <span className="scraps-filter-count">{count}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        <button
+          className="refresh-btn"
+          onClick={fetchScraps}
+          disabled={loading}
+        >
+          <RefreshCw
+            size={13}
+            style={loading ? { animation: "tspin 1s linear infinite" } : {}}
+          />
+          更新
+        </button>
+      </div>
+
+      {/* ── Content ── */}
+      <div className="scraps-content">
+        {/* ── Loading ── */}
+        {loading && (
+          <div className="scraps-loading animate-fade-up">
+            <Loader2 size={24} className="scraps-spinner" />
+            <span>スクラップを取得中...</span>
+          </div>
+        )}
+
+        {/* ── Error ── */}
+        {!loading && error && (
+          <div className="scraps-error animate-fade-up">
+            <div className="scraps-error-icon">
+              <AlertCircle size={18} />
             </div>
-          </GlassCard>
-        ))}
+            <div className="scraps-error-content">
+              <div className="scraps-error-title">
+                データの取得に失敗しました
+              </div>
+              <div className="scraps-error-detail">{error}</div>
+            </div>
+            <button className="scraps-retry-btn" onClick={fetchScraps}>
+              再試行
+            </button>
+          </div>
+        )}
+
+        {/* ── Empty State ── */}
+        {!loading && !error && filteredScraps.length === 0 && (
+          <div className="scraps-empty animate-fade-up">
+            <div className="scraps-empty-icon">
+              <BookOpen size={28} />
+            </div>
+            <div className="scraps-empty-title">スクラップはありません</div>
+            <div className="scraps-empty-desc">
+              {activeCategory
+                ? `「${activeCategory}」カテゴリにはスクラップがありません`
+                : "スクラップがまだ保存されていません"}
+            </div>
+          </div>
+        )}
+
+        {/* ── Grid ── */}
+        {!loading && !error && filteredScraps.length > 0 && (
+          <div className="scraps-grid">
+            {filteredScraps.map((scrap) => (
+              <div key={scrap.id} className="scraps-card">
+                {/* Header */}
+                <div className="scraps-card-header">
+                  <h3 className="scraps-card-title">{scrap.title}</h3>
+                  {scrap.url && (
+                    <button
+                      className="scraps-card-link"
+                      onClick={() => handleOpenLink(scrap.url)}
+                      title="外部リンクで開く"
+                    >
+                      <ExternalLink size={14} />
+                    </button>
+                  )}
+                </div>
+
+                {/* Body */}
+                {scrap.overview && (
+                  <div className="scraps-card-body">
+                    <p className="scraps-card-overview">{scrap.overview}</p>
+                  </div>
+                )}
+
+                {/* Footer */}
+                <div className="scraps-card-footer">
+                  <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+                    {scrap.category && (
+                      <span
+                        className={`scraps-card-category ${CATEGORY_CONFIG[scrap.category as ScrapCategory].badgeClass}`}
+                      >
+                        {scrap.category}
+                      </span>
+                    )}
+                    {scrap.status && (
+                      <span
+                        className={`scraps-card-status ${getStatusClass(scrap.status)}`}
+                      >
+                        {scrap.status}
+                      </span>
+                    )}
+                  </div>
+                  <span className="scraps-card-date">
+                    {formatDate(scrap.createdAt)}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

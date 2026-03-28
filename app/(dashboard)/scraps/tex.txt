@@ -1,0 +1,58 @@
+  <button
+          className="refresh-btn"
+          onClick={fetchScraps}
+          disabled={loading}
+        >
+          <RefreshCw
+            size={13}
+            style={loading ? { animation: "tspin 1s linear infinite" } : {}}
+          />
+          更新
+        </button>
+
+
+.scraps-card-category.badge-idea {
+  background: #d1910041;
+  color: #655121;
+}
+
+.scraps-card-category.badge-insight {
+  background: #0076d934;
+  color: #264a72;
+}
+
+.scraps-card-category.badge-research {
+  background: #5c00a324;
+  color: #553b69;
+}
+
+.scraps-card-category.badge-unclear {
+  background: #00602628;
+  color: #2a533c;
+}
+
+.scraps-card-category.badge-note {
+  background: #ce18002a;
+  color: #6d3531;
+}
+
+/* Status variations */
+.scraps-card-status.status-inbox {
+  background: #d1910041;
+  color: #655121;
+}
+
+.scraps-card-status.status-rejected {
+  background: #1c13011c;
+  color: #494846;
+}
+
+.scraps-card-status.status-documented {
+  background: #00602628;
+  color: #2a533c;
+}
+
+.scraps-card-status.status-tasked {
+  background: #0076d934;
+  color: #264a72;
+}
