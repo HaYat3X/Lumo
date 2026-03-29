@@ -250,68 +250,26 @@ export default function DailyPlanPage() {
           <span className="daily-date-label">{formatDateLabel(date)}</span>
           {!isToday && (
             <button className="daily-today-btn" onClick={goToday}>
-              今日
+              今日へ
             </button>
           )}
         </div>
         <button className="daily-nav-btn" onClick={goNext} title="翌日">
           <ChevronRight size={16} />
         </button>
-        <button className="daily-nav-btn daily-refresh-btn" onClick={refresh} title="更新">
-          <RefreshCw size={14} />
+
+        <button
+          className="refresh-btn"
+          onClick={refresh}
+          disabled={loading}
+        >
+          <RefreshCw
+            size={14}
+            style={loading ? { animation: "tspin 1s linear infinite" } : {}}
+          />
+          更新
         </button>
       </div>
-
-      {/* ── Header Stats ── */}
-      {!loading && !error && items.length > 0 && (
-        <div className="daily-header animate-fade-up">
-          <div className="daily-stat-card">
-            <div className="daily-stat-label">進捗</div>
-            <div className="daily-stat-value">
-              {done}<span className="unit">/{total}</span>
-            </div>
-            <div className="daily-progress-track">
-              <div
-                className="daily-progress-fill"
-                style={{ width: `${progressPct}%` }}
-              />
-            </div>
-          </div>
-
-          <div className="daily-stat-card">
-            <div className="daily-stat-label">ステータス</div>
-            <div className="daily-stat-value">
-              {inProgress > 0 ? (
-                <>
-                  {inProgress}<span className="unit"> 進行中</span>
-                </>
-              ) : done === total && total > 0 ? (
-                <span style={{ fontSize: 16, color: "var(--color-green)" }}>
-                  <CheckCircle2 size={20} style={{ display: "inline", verticalAlign: "-3px", marginRight: 6 }} />
-                  All Done
-                </span>
-              ) : (
-                <>
-                  {total - done}<span className="unit"> 残り</span>
-                </>
-              )}
-            </div>
-            <div className="daily-stat-sub">
-              完了 {done} / 未着手 {total - done - inProgress} / 進行中 {inProgress}
-            </div>
-          </div>
-
-          <div className="daily-stat-card">
-            <div className="daily-stat-label">作業時間</div>
-            <div className="daily-stat-value">
-              {totalHours}<span className="unit">h</span>
-            </div>
-            <div className="daily-stat-sub">
-              {items[0]?.startTime ?? "--:--"} 〜 {items[items.length - 1]?.endTime ?? "--:--"}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* ── Loading ── */}
       {loading && (

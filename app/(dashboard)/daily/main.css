@@ -27,9 +27,9 @@
 }
 
 .daily-nav-btn:hover {
-  border-color: var(--color-border-hover);
-  color: var(--color-text-secondary);
-  background: rgba(255, 255, 255, 0.02);
+  border-color: var(--color-border-accent);
+  color: var(--color-accent-bright);
+  background: var(--color-accent-glow-subtle);
 }
 
 .daily-refresh-btn {
@@ -82,8 +82,13 @@
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .daily-spinner {
@@ -217,13 +222,11 @@
   top: 0;
   bottom: 0;
   width: 1px;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    var(--color-border-hover) 4%,
-    var(--color-border-hover) 96%,
-    transparent 100%
-  );
+  background: linear-gradient(180deg,
+      transparent 0%,
+      var(--color-border-hover) 4%,
+      var(--color-border-hover) 96%,
+      transparent 100%);
 }
 
 /* ── Timeline Item ── */
@@ -313,9 +316,12 @@
 }
 
 @keyframes pulseGlow {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 6px var(--color-accent-glow-sm);
   }
+
   50% {
     box-shadow: 0 0 14px var(--color-accent-glow);
   }
@@ -727,15 +733,73 @@
 
 /* ── Stagger delays for timeline items ── */
 
-.timeline-item:nth-child(1) { animation-delay: 0ms; }
-.timeline-item:nth-child(2) { animation-delay: 40ms; }
-.timeline-item:nth-child(3) { animation-delay: 80ms; }
-.timeline-item:nth-child(4) { animation-delay: 120ms; }
-.timeline-item:nth-child(5) { animation-delay: 160ms; }
-.timeline-item:nth-child(6) { animation-delay: 200ms; }
-.timeline-item:nth-child(7) { animation-delay: 240ms; }
-.timeline-item:nth-child(8) { animation-delay: 280ms; }
-.timeline-item:nth-child(9) { animation-delay: 320ms; }
-.timeline-item:nth-child(10) { animation-delay: 360ms; }
-.timeline-item:nth-child(11) { animation-delay: 400ms; }
-.timeline-item:nth-child(12) { animation-delay: 440ms; }
+.timeline-item:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.timeline-item:nth-child(2) {
+  animation-delay: 40ms;
+}
+
+.timeline-item:nth-child(3) {
+  animation-delay: 80ms;
+}
+
+.timeline-item:nth-child(4) {
+  animation-delay: 120ms;
+}
+
+.timeline-item:nth-child(5) {
+  animation-delay: 160ms;
+}
+
+.timeline-item:nth-child(6) {
+  animation-delay: 200ms;
+}
+
+.timeline-item:nth-child(7) {
+  animation-delay: 240ms;
+}
+
+.timeline-item:nth-child(8) {
+  animation-delay: 280ms;
+}
+
+.timeline-item:nth-child(9) {
+  animation-delay: 320ms;
+}
+
+.timeline-item:nth-child(10) {
+  animation-delay: 360ms;
+}
+
+.timeline-item:nth-child(11) {
+  animation-delay: 400ms;
+}
+
+.timeline-item:nth-child(12) {
+  animation-delay: 440ms;
+}
+
+.refresh-btn {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 13px;
+  border-radius: 9px;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-family: inherit;
+}
+
+.refresh-btn:hover {
+  border-color: var(--color-border-accent);
+  color: var(--color-accent-bright);
+  background: var(--color-accent-glow-subtle);
+}
