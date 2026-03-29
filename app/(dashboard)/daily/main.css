@@ -1,0 +1,826 @@
+/* ============================================
+   Daily Plan Page — Light Mode
+   DESIGN.md トークンに完全準拠
+   ============================================ */
+
+/* ── Date Navigation ── */
+
+.daily-date-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.daily-nav-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.18s ease;
+}
+
+.daily-nav-btn:hover {
+  border-color: var(--color-border-accent);
+  color: var(--color-accent);
+  background: var(--color-accent-glow-subtle);
+}
+
+.daily-refresh-btn {
+  margin-left: auto;
+}
+
+.daily-date-center {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  justify-content: center;
+}
+
+.daily-date-label {
+  font-family: var(--font-heading), "Outfit", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+}
+
+/* ── Today Button（DESIGN.md 5-7 準拠） ── */
+.daily-today-btn {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border-accent);
+  /* rgba(204,85,34,.25) */
+  background: var(--color-accent-glow-subtle);
+  /* rgba(204,85,34,.06) */
+  color: var(--color-accent);
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.daily-today-btn:hover {
+  background: var(--color-accent-glow-sm);
+  /* rgba(204,85,34,.12) */
+  border-color: var(--color-accent);
+}
+
+/* ── Loading ── */
+
+.daily-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 60px 20px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.daily-spinner {
+  animation: spin 1s linear infinite;
+  color: var(--color-accent);
+}
+
+/* ── Error ── */
+
+.daily-error {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  border-radius: 14px;
+  background: rgba(184, 48, 48, 0.05);
+  border: 1px solid rgba(184, 48, 48, 0.12);
+  color: var(--color-red);
+}
+
+.daily-error-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.daily-error-detail {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.daily-retry-btn {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(184, 48, 48, 0.2);
+  background: transparent;
+  color: var(--color-red);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  flex-shrink: 0;
+}
+
+.daily-retry-btn:hover {
+  background: rgba(184, 48, 48, 0.08);
+}
+
+/* ── Header Stats ── */
+
+.daily-header {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.daily-stat-card {
+  flex: 1;
+  background: var(--color-glass);
+  /* rgba(255,255,255,.70) */
+  border: 1px solid var(--color-glass-border);
+  /* rgba(0,0,0,.06) */
+  border-radius: 14px;
+  padding: 16px 20px;
+  backdrop-filter: blur(8px);
+  /* ライトモードは blur(8px) */
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .05), 0 4px 12px rgba(0, 0, 0, .03);
+  transition: border-color 0.2s ease;
+}
+
+.daily-stat-card:hover {
+  border-color: var(--color-border-hover);
+}
+
+.daily-stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 6px;
+}
+
+.daily-stat-value {
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.daily-stat-value .unit {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  margin-left: 2px;
+}
+
+.daily-stat-sub {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
+/* ── Progress Bar (header) ── */
+
+.daily-progress-track {
+  height: 6px;
+  background: rgba(0, 0, 0, 0.05);
+  /* ライトモード対応 */
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.daily-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--color-accent-dim), var(--color-accent));
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Timeline ── */
+
+.daily-timeline {
+  position: relative;
+}
+
+.daily-timeline::before {
+  content: "";
+  position: absolute;
+  left: 54px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg,
+      transparent 0%,
+      var(--color-border-hover) 4%,
+      var(--color-border-hover) 96%,
+      transparent 100%);
+}
+
+/* ── Timeline Item ── */
+
+.timeline-item {
+  position: relative;
+  display: flex;
+  gap: 0;
+  padding: 0 0 2px;
+  animation: fadeUp 0.45s ease-out both;
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-time-col {
+  width: 54px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-right: 16px;
+  padding-top: 14px;
+}
+
+.timeline-time {
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  line-height: 1;
+}
+
+.timeline-time-end {
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--color-text-dim);
+  margin-top: 4px;
+  line-height: 1;
+}
+
+.timeline-dot-col {
+  width: 10px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.timeline-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 2px solid var(--color-bg-base);
+  /* アイボリー背景に合わせる */
+}
+
+/* DESIGN.md 5-7 ステータスドット */
+.timeline-dot.status-done {
+  background: var(--color-green);
+  box-shadow: 0 0 8px rgba(45, 130, 89, 0.25);
+}
+
+.timeline-dot.status-in-progress {
+  background: var(--color-accent);
+  box-shadow: 0 0 10px var(--color-accent-glow-sm);
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.timeline-dot.status-todo {
+  background: var(--color-text-dim);
+}
+
+.timeline-dot.status-changed {
+  background: var(--color-amber);
+  box-shadow: 0 0 8px rgba(192, 122, 32, 0.25);
+}
+
+.timeline-dot.status-hold {
+  background: var(--color-purple);
+  box-shadow: 0 0 8px rgba(107, 84, 184, 0.25);
+}
+
+/* DESIGN.md 7 — オレンジ系 pulseGlow */
+@keyframes pulseGlow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 6px rgba(204, 85, 34, 0.20);
+  }
+
+  50% {
+    box-shadow: 0 0 14px rgba(204, 85, 34, 0.40);
+  }
+}
+
+/* ── Content ── */
+
+.timeline-content {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 0 6px 12px;
+}
+
+/* ── Timeline Card ── */
+
+.timeline-card {
+  background: var(--color-glass);
+  border: 1px solid var(--color-glass-border);
+  border-radius: 11px;
+  padding: 14px 16px;
+  position: relative;
+  transition: all 0.2s ease;
+  /* クリック可能にする */
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+  color: inherit;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .04);
+}
+
+.timeline-card:hover {
+  border-color: var(--color-border-hover);
+  /* rgba(0,0,0,.12) */
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .07);
+  transform: translateY(-1px);
+}
+
+.timeline-card:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .04);
+}
+
+/* Notion リンクなし（url未設定）の場合はポインターを戻す */
+.timeline-card.no-link {
+  cursor: default;
+}
+
+.timeline-card.no-link:hover {
+  transform: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .04);
+}
+
+/* Cards with category left-border */
+.timeline-card[class*="cat-"] {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+/* DESIGN.md — is-current: ブルーからオレンジに変更 */
+.timeline-card.is-current {
+  border-color: var(--color-border-accent);
+  /* rgba(204,85,34,.25) */
+  background: rgba(204, 85, 34, 0.03);
+  box-shadow: 0 0 20px rgba(204, 85, 34, 0.06);
+}
+
+.timeline-card.is-break {
+  background: var(--color-bg-elevated);
+  border-style: dashed;
+  border-color: var(--color-border);
+}
+
+/* ── Card Header ── */
+
+.timeline-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.timeline-card-icon {
+  font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+}
+
+.timeline-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Card Meta ── */
+
+.timeline-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+/* ── Badge ── */
+
+.timeline-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  line-height: 1.4;
+}
+
+/* DESIGN.md — ステータスバッジ（ブルーからオレンジへ） */
+.timeline-badge.badge-status {
+  background: #0076d934;
+  color: #264a72;
+}
+
+.timeline-badge.badge-status-done {
+  background: #00602628;
+  color: #2a533c;
+}
+
+.timeline-badge.badge-status-changed {
+  background: #d1910041;
+  color: #655121;
+}
+
+.timeline-badge.badge-status-hold {
+  background: #5c00a324;
+  color: #553b69;
+}
+
+.timeline-badge.badge-status-todo {
+  background: #1c13011c;
+  color: #494846;
+}
+
+/* ── Progress in Card ── */
+
+.timeline-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.timeline-progress-label {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.timeline-progress-track {
+  flex: 1;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.05);
+  /* ライトモード対応 */
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.timeline-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* DESIGN.md — fill-target: ブルーからオレンジへ */
+.timeline-progress-fill.fill-target {
+  background: var(--color-green);
+}
+
+.timeline-progress-fill.fill-actual {
+  background: var(--color-green);
+}
+
+.timeline-progress-pct {
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  width: 32px;
+  text-align: right;
+}
+
+/* ── Memo ── */
+
+.timeline-memo {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+/* ── Category Card Variants ── */
+
+.timeline-card.cat-goal {
+  border-left: 3px solid #0076d9;
+}
+
+.timeline-card.cat-routine {
+  border-left: 3px solid #d19100;
+}
+
+.timeline-card.cat-project {
+  border-left: 3px solid #ce1800;
+}
+
+.timeline-card.cat-adhoc {
+  border-left: 3px solid var(--color-purple);
+}
+
+.timeline-card.cat-misc {
+  border-left: 3px solid #1c1301;
+}
+
+/* is-current + category */
+.timeline-card.is-current.cat-goal {
+  box-shadow: 0 0 20px rgba(204, 85, 34, 0.08);
+}
+
+.timeline-card.is-current.cat-routine {
+  border-color: rgba(192, 122, 32, 0.25);
+  box-shadow: 0 0 20px rgba(192, 122, 32, 0.06);
+}
+
+.timeline-card.is-current.cat-project {
+  border-color: rgba(184, 48, 48, 0.25);
+  box-shadow: 0 0 20px rgba(184, 48, 48, 0.06);
+}
+
+.timeline-card.is-current.cat-adhoc {
+  border-color: rgba(107, 84, 184, 0.25);
+  box-shadow: 0 0 20px rgba(107, 84, 184, 0.06);
+}
+
+.timeline-card.is-current.cat-misc {
+  border-color: rgba(138, 131, 122, 0.25);
+  box-shadow: 0 0 20px rgba(138, 131, 122, 0.06);
+}
+
+/* Completed cards */
+.timeline-card.is-done {
+  opacity: 0.72;
+}
+
+.timeline-card.is-done.cat-goal,
+.timeline-card.is-done.cat-routine,
+.timeline-card.is-done.cat-project,
+.timeline-card.is-done.cat-adhoc,
+.timeline-card.is-done.cat-misc {
+  border-left-color: var(--color-border);
+  background: var(--color-glass);
+}
+
+.timeline-card.is-done .timeline-card-title {
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+}
+
+/* ── Category Badge Variants ── */
+
+.timeline-badge.badge-cat-goal {
+  background: #0076d934;
+  color: #264a72;
+}
+
+.timeline-badge.badge-cat-routine {
+  background: #d1910041;
+  color: #655121;
+}
+
+.timeline-badge.badge-cat-project {
+  background: #ce18002a;
+  color: #6d3531;
+}
+
+.timeline-badge.badge-cat-adhoc {
+  background: #5c00a324;
+  color: #553b69;
+}
+
+.timeline-badge.badge-cat-misc {
+  background: #1c13011c;
+  color: #494846;
+}
+
+/* ── Empty State ── */
+
+.daily-empty {
+  text-align: center;
+  padding: 48px 20px;
+}
+
+.daily-empty-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--color-accent-glow-subtle);
+  border: 1px solid var(--color-border-accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  margin-bottom: 14px;
+}
+
+.daily-empty-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 6px;
+}
+
+.daily-empty-desc {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+/* ── Now Line (Between items) ── */
+
+.timeline-now-line {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 24px;
+  z-index: 2;
+}
+
+.timeline-now-time-col {
+  width: 54px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 16px;
+}
+
+.timeline-now-time {
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-red);
+  line-height: 1;
+}
+
+.timeline-now-dot-col {
+  width: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 3;
+}
+
+.timeline-now-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-red);
+  box-shadow: 0 0 8px rgba(184, 48, 48, 0.4), 0 0 16px rgba(184, 48, 48, 0.15);
+}
+
+.timeline-now-rule {
+  flex: 1;
+  height: 2px;
+  background: var(--color-red);
+  box-shadow: 0 0 6px rgba(184, 48, 48, 0.2);
+  border-radius: 1px;
+  margin-right: 4px;
+}
+
+/* In-card overlay */
+.timeline-now-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  z-index: 5;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+.timeline-now-overlay-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-red);
+  box-shadow: 0 0 6px rgba(184, 48, 48, 0.4);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  margin-left: -15px;
+}
+
+.timeline-now-overlay-line {
+  flex: 1;
+  height: 1.5px;
+  background: var(--color-red);
+  box-shadow: 0 0 6px rgba(184, 48, 48, 0.2);
+  border-radius: 1px;
+}
+
+/* ── Stagger Delays ── */
+
+.timeline-item:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.timeline-item:nth-child(2) {
+  animation-delay: 40ms;
+}
+
+.timeline-item:nth-child(3) {
+  animation-delay: 80ms;
+}
+
+.timeline-item:nth-child(4) {
+  animation-delay: 120ms;
+}
+
+.timeline-item:nth-child(5) {
+  animation-delay: 160ms;
+}
+
+.timeline-item:nth-child(6) {
+  animation-delay: 200ms;
+}
+
+.timeline-item:nth-child(7) {
+  animation-delay: 240ms;
+}
+
+.timeline-item:nth-child(8) {
+  animation-delay: 280ms;
+}
+
+.timeline-item:nth-child(9) {
+  animation-delay: 320ms;
+}
+
+.timeline-item:nth-child(10) {
+  animation-delay: 360ms;
+}
+
+.timeline-item:nth-child(11) {
+  animation-delay: 400ms;
+}
+
+.timeline-item:nth-child(12) {
+  animation-delay: 440ms;
+}
+
+/* ── Refresh Button ── */
+
+.refresh-btn {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 13px;
+  border-radius: 9px;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-family: inherit;
+}
+
+.refresh-btn:hover {
+  border-color: var(--color-border-accent);
+  color: var(--color-accent);
+  background: var(--color-accent-glow-subtle);
+}

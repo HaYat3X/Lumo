@@ -8,12 +8,12 @@ import {
   Send,
   Bot,
   User,
-  Paperclip,
   Sparkles,
   CalendarPlus,
   ListChecks,
   RotateCcw,
 } from "lucide-react";
+import Image from "next/image";
 
 /* ──────────────────────────────────────────
    Types
@@ -27,45 +27,32 @@ type Message = {
 
 /* ──────────────────────────────────────────
    Initial welcome message
+   Markdown形式で改行は末尾2スペース or 空行
    ────────────────────────────────────────── */
 const WELCOME_MESSAGE: Message = {
   id: "welcome",
   role: "assistant",
   content:
-    "こんにちは！Aetherです。\nスケジュール管理、タスク登録、メモ作成など、なんでもお手伝いします。何をしましょうか？",
-  timestamp: "—",
+    "こんにちは！**Lumo**です。\n\nスケジュール管理、タスク登録、メモ作成など、なんでもお手伝いします。\n\n何をしましょうか？",
+  timestamp: "",
 };
 
 /* ──────────────────────────────────────────
    Quick actions
    ────────────────────────────────────────── */
 const QUICK_ACTIONS = [
-  { icon: CalendarPlus, label: "予定を追加", prompt: "明日の14時に会議を追加して" },
+  {
+    icon: CalendarPlus,
+    label: "予定を追加",
+    prompt: "明日の14時に会議を追加して",
+  },
   { icon: ListChecks, label: "タスク登録", prompt: "タスクを新しく登録して" },
-  { icon: Sparkles, label: "今日の要約", prompt: "今日の予定とタスクをまとめて" },
+  {
+    icon: Sparkles,
+    label: "今日の要約",
+    prompt: "今日の予定とタスクをまとめて",
+  },
 ];
-
-/* ──────────────────────────────────────────
-   Right sidebar data
-   ────────────────────────────────────────── */
-const NEXT_UP = [
-  { time: "10:00", title: "チームMTG", color: "var(--color-accent-bright)" },
-  { time: "14:00", title: "1on1 田中さん", color: "var(--color-amber)" },
-  { time: "16:00", title: "コードレビュー", color: "var(--color-purple)" },
-];
-
-const TODAY_TASKS = [
-  { title: "レポート提出", done: false, priority: "high" },
-  { title: "企画書レビュー", done: false, priority: "medium" },
-  { title: "MTGアジェンダ作成", done: true, priority: "high" },
-  { title: "デザインFB返信", done: false, priority: "low" },
-];
-
-const PRIORITY_COLORS: Record<string, string> = {
-  high: "var(--color-red)",
-  medium: "var(--color-amber)",
-  low: "var(--color-text-muted)",
-};
 
 /* ──────────────────────────────────────────
    Helper
@@ -168,8 +155,8 @@ export default function ChatPage() {
                 prev.map((m) =>
                   m.id === aiMsgId
                     ? { ...m, content: m.content + parsed.text }
-                    : m
-                )
+                    : m,
+                ),
               );
             }
             if (parsed.status) {
@@ -177,16 +164,16 @@ export default function ChatPage() {
                 prev.map((m) =>
                   m.id === aiMsgId && m.content === ""
                     ? { ...m, content: `⏳ ${parsed.status}` }
-                    : m
-                )
+                    : m,
+                ),
               );
               setTimeout(() => {
                 setMessages((prev) =>
                   prev.map((m) =>
                     m.id === aiMsgId && m.content.startsWith("⏳")
                       ? { ...m, content: "" }
-                      : m
-                  )
+                      : m,
+                  ),
                 );
               }, 100);
             }
@@ -201,11 +188,11 @@ export default function ChatPage() {
         prev.map((m) =>
           m.id === aiMsgId
             ? {
-              ...m,
-              content: `エラーが発生しました: ${(err as Error).message}\n\n.env に ANTHROPIC_API_KEY が設定されているか確認してください。`,
-            }
-            : m
-        )
+                ...m,
+                content: `エラーが発生しました: ${(err as Error).message}\n\n.env に ANTHROPIC_API_KEY が設定されているか確認してください。`,
+              }
+            : m,
+        ),
       );
     } finally {
       setIsStreaming(false);
@@ -256,6 +243,13 @@ export default function ChatPage() {
                 {msg.role === "assistant" && (
                   <div className="chat-avatar chat-avatar-ai">
                     <Bot size={16} />
+                    <Image
+                      src="/login.png"
+                      alt="Lumo"
+                      width={36}
+                      height={36}
+                      className="rounded-[10px]"
+                    />
                   </div>
                 )}
 
@@ -264,22 +258,20 @@ export default function ChatPage() {
                 >
                   <div className="chat-bubble-content">
                     {msg.role === "assistant" &&
-                      msg.content === "" &&
-                      isStreaming ? (
+                    msg.content === "" &&
+                    isStreaming ? (
                       <div className="typing-indicator">
                         <span className="typing-dot" />
                         <span className="typing-dot" />
                         <span className="typing-dot" />
                       </div>
                     ) : msg.role === "assistant" ? (
-                      /* AI応答: Markdownレンダリング */
                       <div className="md-content">
                         <ReactMarkdown remarkPlugins={[remarkGfm]}>
                           {msg.content}
                         </ReactMarkdown>
                       </div>
                     ) : (
-                      /* ユーザー: そのまま表示（改行は保持） */
                       msg.content.split("\n").map((line, i) => (
                         <span key={i}>
                           {line}
@@ -307,6 +299,20 @@ export default function ChatPage() {
 
         {/* Quick Actions */}
         <div className="chat-quick-actions">
+          {QUICK_ACTIONS.map((action) => {
+            const Icon = action.icon;
+            return (
+              <button
+                key={action.label}
+                className="quick-action-btn"
+                onClick={() => handleQuickAction(action.prompt)}
+              >
+                <Icon size={14} />
+                <span>{action.label}</span>
+              </button>
+            );
+          })}
+
           {messages.length > 1 && (
             <button className="quick-action-btn" onClick={handleNewChat}>
               <RotateCcw size={14} />
@@ -315,16 +321,16 @@ export default function ChatPage() {
           )}
         </div>
 
-        {/* Input — textarea with Cmd/Ctrl+Enter to send */}
+        {/* Input */}
         <div className="chat-input-area">
           <div className="chat-input-wrapper">
-            <button className="chat-input-action" title="ファイルを添付">
+            <button className="chat-input-action" title="Aether">
               <Bot size={16} />
             </button>
             <textarea
               ref={textareaRef}
               className="chat-input"
-              placeholder="メッセージを入力... (Cmd/Ctrl + Enterで送信)"
+              placeholder="メッセージを入力... (Cmd/Ctrl + Enter で送信)"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}

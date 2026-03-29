@@ -1,0 +1,495 @@
+/* ============================================
+   Scraps Page — Tab-based Layout
+   ============================================ */
+
+/* ── Header + Tabs ── */
+
+.scraps-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.scraps-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.refresh-btn {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 13px;
+  border-radius: 9px;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-family: inherit;
+}
+
+.refresh-btn:hover {
+  border-color: var(--color-border-accent);
+  color: var(--color-accent-bright);
+  background: var(--color-accent-glow-subtle);
+}
+
+.scraps-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  padding: 0;
+  margin: 0;
+}
+
+/* ── Category Filter ── */
+
+.scraps-filters {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.scraps-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.scraps-filter-btn:hover {
+  border-color: var(--color-border-hover);
+  color: var(--color-text-secondary);
+}
+
+.scraps-filter-btn.active {
+  border-color: var(--color-border-accent);
+  color: var(--color-accent-bright);
+  background: var(--color-accent-glow-subtle);
+}
+
+.scraps-filter-count {
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+.scraps-filter-btn.active .scraps-filter-count {
+  background: var(--color-accent-glow-sm);
+  border-color: var(--color-border-accent);
+  color: var(--color-accent-bright);
+}
+
+/* ── Content Area ── */
+
+.scraps-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Loading ── */
+
+.scraps-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 60px 20px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.scraps-spinner {
+  animation: spin 1s linear infinite;
+  color: var(--color-accent);
+}
+
+/* ── Error ── */
+
+.scraps-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  background: rgba(184, 48, 48, 0.06);
+  border: 1px solid rgba(184, 48, 48, 0.12);
+  color: var(--color-red);
+  margin: 0 0 20px 0;
+}
+
+.scraps-error-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.scraps-error-content {
+  flex: 1;
+}
+
+.scraps-error-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+}
+
+.scraps-error-detail {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.scraps-retry-btn {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(184, 48, 48, 0.2);
+  background: transparent;
+  color: var(--color-red);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.scraps-retry-btn:hover {
+  background: rgba(184, 48, 48, 0.1);
+  border-color: rgba(184, 48, 48, 0.3);
+}
+
+/* ── Empty State ── */
+
+.scraps-empty {
+  text-align: center;
+  padding: 48px 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.scraps-empty-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: var(--color-accent-glow-subtle);
+  border: 1px solid var(--color-accent-glow-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  margin-bottom: 16px;
+}
+
+.scraps-empty-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 6px;
+}
+
+.scraps-empty-desc {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  max-width: 280px;
+}
+
+/* ── Grid Layout ── */
+
+.scraps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 14px;
+  padding: 0;
+  flex: 1;
+  align-content: start;
+}
+
+.scraps-card {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 11px;
+  padding: 16px;
+  transition:
+    border-color 0.18s ease,
+    transform 0.15s ease;
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+  animation: fadeUp 0.45s ease-out both;
+  min-height: 180px;
+  position: relative;
+  overflow: hidden;
+}
+
+.scraps-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+}
+
+.scraps-card:hover {
+  transform: translateY(-1px);
+}
+
+/* ── Card Header ── */
+
+.scraps-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.scraps-card-title {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.4;
+  word-break: break-word;
+  margin: 0;
+}
+
+.scraps-card-link {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+  opacity: 0;
+}
+
+.scraps-card:hover .scraps-card-link {
+  opacity: 1;
+}
+
+.scraps-card-link:hover {
+  border-color: var(--color-border-accent);
+  color: var(--color-accent-bright);
+  background: var(--color-accent-glow-subtle);
+}
+
+.scraps-card:hover .scraps-card-link:not(:hover) {
+  background: transparent;
+}
+
+/* ── Card Body ── */
+
+.scraps-card-body {
+  flex: 1;
+  margin-bottom: 12px;
+}
+
+.scraps-card-overview {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+  margin: 0;
+}
+
+/* ── Card Footer ── */
+
+.scraps-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+}
+
+.scraps-card-status {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 6px;
+  white-space: nowrap;
+  background: var(--color-accent-glow-subtle);
+  color: var(--color-accent);
+}
+
+/* Status variations */
+.scraps-card-status.status-inbox {
+  background: #d1910041;
+  color: #655121;
+}
+
+.scraps-card-status.status-rejected {
+  background: #1c13011c;
+  color: #494846;
+}
+
+.scraps-card-status.status-documented {
+  background: #00602628;
+  color: #2a533c;
+}
+
+.scraps-card-status.status-tasked {
+  background: #0076d934;
+  color: #264a72;
+}
+
+
+.scraps-card-date {
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--color-text-dim);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Stagger Animation ── */
+
+.scraps-card:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.scraps-card:nth-child(2) {
+  animation-delay: 30ms;
+}
+
+.scraps-card:nth-child(3) {
+  animation-delay: 60ms;
+}
+
+.scraps-card:nth-child(4) {
+  animation-delay: 90ms;
+}
+
+.scraps-card:nth-child(5) {
+  animation-delay: 120ms;
+}
+
+.scraps-card:nth-child(6) {
+  animation-delay: 150ms;
+}
+
+.scraps-card:nth-child(7) {
+  animation-delay: 180ms;
+}
+
+.scraps-card:nth-child(8) {
+  animation-delay: 210ms;
+}
+
+.scraps-card:nth-child(9) {
+  animation-delay: 240ms;
+}
+
+.scraps-card:nth-child(10) {
+  animation-delay: 270ms;
+}
+
+.scraps-card:nth-child(11) {
+  animation-delay: 300ms;
+}
+
+.scraps-card:nth-child(12) {
+  animation-delay: 330ms;
+}
+
+/* ── Category Badge ── */
+.scraps-card-category {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+
+.scraps-card-category.badge-idea {
+  background: #d1910041;
+  color: #655121;
+}
+
+.scraps-card-category.badge-insight {
+  background: #0076d934;
+  color: #264a72;
+}
+
+.scraps-card-category.badge-research {
+  background: #5c00a324;
+  color: #553b69;
+}
+
+.scraps-card-category.badge-unclear {
+  background: #00602628;
+  color: #2a533c;
+}
+
+.scraps-card-category.badge-note {
+  background: #ce18002a;
+  color: #6d3531;
+}
+
+/* スクロールバー非表示 */
+.scraps-container::-webkit-scrollbar {
+  width: 0;
+  display: none;
+}
+
+.scraps-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
