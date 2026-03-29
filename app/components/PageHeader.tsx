@@ -40,7 +40,7 @@ const PAGE_META: Record<string, PageMeta> = {
   },
   "/tasks": { title: "タスク", subtitle: "今週のタスク一覧", icon: ListChecks },
   "/daily": { title: "行動プラン", subtitle: "今日の行動プラン", icon: Clock },
-  "/scraps": { title: "アイデア", subtitle: "アイデアスクラップメモ", icon: TowelRack },
+  "/scraps": { title: "スクラップ", subtitle: "アイデアや気になることなどの一時メモ", icon: TowelRack },
   "/trends": { title: "トレンド", subtitle: "今週の最新トレンド", icon: TrendingUp },
   "/integrations": {
     title: "Integrations",
