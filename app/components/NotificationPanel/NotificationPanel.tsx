@@ -129,8 +129,6 @@ function NotificationItem({
       className={`notif-item${notif.isRead ? " is-read" : " is-unread"}${notif.link ? " has-link" : ""}`}
       onClick={handleClick}
     >
-      {!notif.isRead && <div className="notif-unread-dot" />}
-
       <div className={`notif-icon ${cfg.colorClass}`}>
         <Icon size={14} />
       </div>
@@ -143,13 +141,9 @@ function NotificationItem({
           </span>
         </div>
         <p className="notif-body">{notif.body}</p>
-        {notif.link && (
-          <span className="notif-link-hint">
-            確認する <ChevronRight size={11} />
-          </span>
-        )}
       </div>
 
+      {/* Notion-style floating action buttons */}
       <div className="notif-actions" onClick={(e) => e.stopPropagation()}>
         {!notif.isRead && (
           <button
