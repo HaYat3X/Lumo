@@ -36,7 +36,7 @@ export const scrapRegister = async (input: ScrapRegisterInput) => {
 
   // URLスクラップの場合のみURLプロパティをセット
   if (input.source_url) {
-    properties["userDefined:URL"] = { url: input.source_url };
+    properties["URL"] = { url: input.source_url };
   }
 
   const response = await getNotionClient.pages.create({
