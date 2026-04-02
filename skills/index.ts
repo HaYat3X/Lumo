@@ -4,8 +4,8 @@
 import type Anthropic from "@anthropic-ai/sdk";
 import { getEventsSkill } from "./get-events";
 import { getEvents } from "./get-events/script";
-import { createEventsSkill } from "./create-events";
-import { createEvent } from "./create-events/script";
+import { createEventsSkill } from "./create-event";
+import { createEvent } from "./create-event/script";
 
 /* ──────────────────────────────────────────
    SKILLSリスト

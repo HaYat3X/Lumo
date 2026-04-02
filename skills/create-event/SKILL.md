@@ -1,5 +1,5 @@
 ---
-name: create-events
+name: create-event
 description: Googleカレンダーに新しい予定を登録するスキル
 ---
 
