@@ -1,16 +1,23 @@
 /* ──────────────────────────────────────────
    インポート
    ────────────────────────────────────────── */
-import type Anthropic from "@anthropic-ai/sdk";
+import { createTaskSkill } from "./create-task";
+import { createTask } from "./create-task/script";
 import { getEventsSkill } from "./get-events";
 import { getEvents } from "./get-events/script";
-import { createEventsSkill } from "./create-event";
+import { createEventSkill } from "./create-event";
 import { createEvent } from "./create-event/script";
+import type Anthropic from "@anthropic-ai/sdk";
+import type { CreateTaskInput } from "./create-task/script";
 
 /* ──────────────────────────────────────────
    SKILLSリスト
    ────────────────────────────────────────── */
-export const SKILLS: Anthropic.Tool[] = [getEventsSkill, createEventsSkill];
+export const SKILLS: Anthropic.Tool[] = [
+  createTaskSkill,
+  getEventsSkill,
+  createEventSkill,
+];
 
 /* ──────────────────────────────────────────
    executeToolルーター
@@ -23,6 +30,10 @@ export async function executeSkill(
   toolInput: Record<string, unknown>,
 ): Promise<string | null> {
   switch (toolName) {
+    case "create-task": {
+      const result = await createTask(toolInput as CreateTaskInput);
+      return JSON.stringify(result);
+    }
     case "get-events": {
       const result = await getEvents(
         toolInput as { date?: string; days?: number },
