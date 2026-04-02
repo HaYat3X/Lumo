@@ -15,7 +15,7 @@ const TIMEZONE = "Asia/Tokyo";
 /* ──────────────────────────────────────────
    型定義
    ────────────────────────────────────────── */
-type GetEventsInput = {
+export type GetEventsInput = {
   date?: string;
   days?: number;
 };

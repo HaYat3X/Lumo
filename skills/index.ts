@@ -13,10 +13,15 @@ import { createEvent } from "./create-event/script";
 import { queryNotionDatabaseSkill } from "./query-notion-database";
 import { queryNotionDatabase } from "./query-notion-database/script";
 
+import { createDailyPlanSkill } from "./create-daily-plan";
+import { createDailyPlan } from "./create-daily-plan/script";
+
 import type Anthropic from "@anthropic-ai/sdk";
 import type { CreateTaskInput } from "./create-task/script";
 import type { CreateEventInput } from "./create-event/script";
 import type { QueryInput } from "./query-notion-database/script";
+import type { CreateDailyPlanInput } from "./create-daily-plan/script";
+import type { GetEventsInput } from "./get-events/script";
 
 /* ──────────────────────────────────────────
    SKILLSリスト
@@ -26,7 +31,16 @@ export const SKILLS: Anthropic.Tool[] = [
   getEventsSkill,
   createEventSkill,
   queryNotionDatabaseSkill,
+  createDailyPlanSkill.tool,
 ];
+
+/* ──────────────────────────────────────────
+   SYSTEM_PROMPTリスト
+   ────────────────────────────────────────── */
+export const SYSTEM_PROMPTS = [createDailyPlanSkill]
+  .map((s) => s.systemPrompt)
+  .filter(Boolean)
+  .join("\n\n---\n\n");
 
 /* ──────────────────────────────────────────
    executeToolルーター
@@ -44,9 +58,7 @@ export async function executeSkill(
       return JSON.stringify(result);
     }
     case "get-events": {
-      const result = await getEvents(
-        toolInput as { date?: string; days?: number },
-      );
+      const result = await getEvents(toolInput as GetEventsInput);
       return JSON.stringify(result);
     }
     case "create-event": {
@@ -55,6 +67,10 @@ export async function executeSkill(
     }
     case "query-notion-database": {
       const result = await queryNotionDatabase(toolInput as QueryInput);
+      return JSON.stringify(result);
+    }
+    case "create-daily-plan": {
+      const result = await createDailyPlan(toolInput as CreateDailyPlanInput);
       return JSON.stringify(result);
     }
     default:

@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest } from "next/server";
 import { executeTool } from "./notion";
-import { SKILLS, executeSkill } from "@/skills";
+import { SYSTEM_PROMPTS, SKILLS, executeSkill } from "@/skills";
 
 /* ──────────────────────────────────────────
    Config
@@ -9,7 +9,8 @@ import { SKILLS, executeSkill } from "@/skills";
 const MAX_CONTEXT_MESSAGES = 10;
 // const MODEL = "claude-sonnet-4-20250514";
 const MODEL = "claude-haiku-4-5-20251001";
-const ALL_TOOLS = [...SKILLS];
+
+// 性格などの設定はユーザが設定できるようにする
 const SYSTEM_PROMPT = `あなたは「Luno」という名前のAI秘書です。
 ユーザーの個人的なスケジュール管理・タスク管理・メモ作成をサポートしつつ、
 知的な相談相手としてもユーザーを支援します。
@@ -32,52 +33,9 @@ const SYSTEM_PROMPT = `あなたは「Luno」という名前のAI秘書です。
 - 壁打ち、ブレスト、アイデア出し → 創造的に一緒に考える
 - 文章の添削、要約、翻訳 → AIの得意分野として対応
 
-### ツールを使うケース
-- 「今日の予定は？」→ get-events（ユーザーの実データが必要）
-- 「タスク登録して」→ create_task（書き込み操作）
-- 「今のタスク見せて」→ query_notion_database（ユーザーの実データ参照）
-- 「デイリープラン作って」→ 複数ツール連携（後述）
-- 「○○について書いたメモある？」→ search_notion（Notion内検索）
-
-### 両方を組み合わせるケース
-- 「このタスクの進め方を考えて」→ まずNotion情報を取得 → AI知識で分析・提案
-- 「来週の戦略を練りたい」→ スケジュール＋タスクを取得 → AI思考で戦略提案
-
-## 利用可能なツール
-- create_task: Notionにタスク登録
-- query_notion_database: Notionの各種DB(タスク, デイリープラン, スクラップ, スプリント, ナレッジ, レビュー, OKR, KeyResults)からデータ取得
-- search_notion: Notionワークスペース横断検索
-- get_events: Googleカレンダー予定取得
-- create_event: Googleカレンダー予定登録
-- create_daily_plan: デイリープラン一括登録
-
-## タスク登録のルール
-- ユーザーがタスク追加の意図を示したら create-task ツールを使う
-- 優先度や種類をユーザーが指定しない場合はデフォルト値を使う（確認しなくてよい）
-- 登録完了後は「登録しました」と結果を簡潔に伝える
-
-## スケジュール関連のルール
-- 「今日の予定」→ get_events（date省略）
-- 「明日の予定」→ get_events（date=明日の日付）
-- 「今週の予定」→ get_events（date=今日, days=7）
-- 予定取得後は見やすく箇条書きで時刻・タイトルを伝える
-- 「予定を入れて」→ create-event を使う
-- 「明日」「来週月曜」などの相対日付は、今日の日付から計算してYYYY-MM-DD形式にする
-- ユーザーが終了時刻を言わなかった場合は開始の1時間後をデフォルトにする
-
-## デイリープラン作成のルール
-- 「デイリープランを作って」「今日の予定を立てて」→ 以下の手順を必ず踏む：
-  1. get_events で今日のGoogleカレンダー予定を取得
-  2. query_notion_database で database_name="タスク", sprint_status_filter="進行中" でタスクを取得
-  3. 上記2つの結果をもとに、以下のルールでデイリープランを組み立てる：
-     - Googleカレンダーの予定（MTG等）はその時間帯にそのまま配置
-     - 期限が近いタスク・優先度が高いタスクを優先的に配置
-     - 見積時間(h)がある場合はその時間分を確保。なければ1時間を想定
-     - 12:00-13:00 は昼休憩を入れる
-     - 作業の開始は9:00、終了は18:00を目安にする
-     - タスクのidをrelated_task_idに設定してリレーション紐づけ
-  4. create_daily_plan で一括登録
-- 登録後は作成したプランの一覧を時系列で伝える`;
+## スキル定義
+${SYSTEM_PROMPTS}
+`;
 
 /* ──────────────────────────────────────────
    Types
@@ -157,9 +115,11 @@ export async function POST(req: NextRequest) {
           model: MODEL,
           max_tokens: 1024,
           system: SYSTEM_PROMPT,
-          tools: ALL_TOOLS, // ← ここ
+          tools: SKILLS,
           messages: apiMessages,
         });
+
+        console.log(SYSTEM_PROMPT);
 
         // ── Step 2: Tool use loop ──
         // Claude may request tool use multiple rounds.
@@ -228,7 +188,7 @@ export async function POST(req: NextRequest) {
             model: MODEL,
             max_tokens: 2048,
             system: SYSTEM_PROMPT,
-            tools: ALL_TOOLS, // ← ここもマージしたツールに差し替え
+            tools: SKILLS,
             messages: conversationMessages,
           });
         }
