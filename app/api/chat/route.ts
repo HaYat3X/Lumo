@@ -3,6 +3,12 @@ import { NextRequest } from "next/server";
 import { TOOLS } from "./tools";
 import { executeTool } from "./notion";
 
+// SKILLSフォルダから読み込み
+import { SKILLS, executeSkill } from "@/skills";
+
+// SKILLSと既存TOOLSをマージ
+const ALL_TOOLS = [...SKILLS, ...TOOLS.filter((t) => t.name !== "get-events")];
+
 /* ──────────────────────────────────────────
    Config
    ────────────────────────────────────────── */
@@ -107,12 +113,12 @@ function createSSEStream() {
     },
     sendText(text: string) {
       controller?.enqueue(
-        encoder.encode(`data: ${JSON.stringify({ text })}\n\n`)
+        encoder.encode(`data: ${JSON.stringify({ text })}\n\n`),
       );
     },
     sendStatus(status: string) {
       controller?.enqueue(
-        encoder.encode(`data: ${JSON.stringify({ status })}\n\n`)
+        encoder.encode(`data: ${JSON.stringify({ status })}\n\n`),
       );
     },
     close() {
@@ -121,7 +127,7 @@ function createSSEStream() {
     },
     error(msg: string) {
       controller?.enqueue(
-        encoder.encode(`data: ${JSON.stringify({ error: msg })}\n\n`)
+        encoder.encode(`data: ${JSON.stringify({ error: msg })}\n\n`),
       );
       controller?.close();
     },
@@ -136,10 +142,7 @@ export async function POST(req: NextRequest) {
     const { messages } = await req.json();
 
     if (!messages || !Array.isArray(messages)) {
-      return Response.json(
-        { error: "messages is required" },
-        { status: 400 }
-      );
+      return Response.json({ error: "messages is required" }, { status: 400 });
     }
 
     const trimmed = messages.slice(-MAX_CONTEXT_MESSAGES);
@@ -155,20 +158,27 @@ export async function POST(req: NextRequest) {
           content: msg.content,
         }));
 
+        // カスタムツール使用前
+        // let response = await client.messages.create({
+        //   model: MODEL,
+        //   max_tokens: 1024,
+        //   system: SYSTEM_PROMPT,
+        //   tools: TOOLS,
+        //   messages: apiMessages,
+        // });
+        // Step1の呼び出し
         let response = await client.messages.create({
           model: MODEL,
           max_tokens: 1024,
           system: SYSTEM_PROMPT,
-          tools: TOOLS,
+          tools: ALL_TOOLS, // ← ここ
           messages: apiMessages,
         });
 
         // ── Step 2: Tool use loop ──
         // Claude may request tool use multiple rounds.
         // Each round, we accumulate messages so context is preserved.
-        const conversationMessages: Anthropic.MessageParam[] = [
-          ...apiMessages,
-        ];
+        const conversationMessages: Anthropic.MessageParam[] = [...apiMessages];
 
         while (response.stop_reason === "tool_use") {
           const assistantContent = response.content;
@@ -188,12 +198,14 @@ export async function POST(req: NextRequest) {
 
           // Find tool_use blocks
           const toolUseBlocks = assistantContent.filter(
-            (b): b is Anthropic.ToolUseBlock & {
+            (
+              b,
+            ): b is Anthropic.ToolUseBlock & {
               type: "tool_use";
               id: string;
               name: string;
               input: Record<string, unknown>;
-            } => b.type === "tool_use"
+            } => b.type === "tool_use",
           );
 
           // Execute each tool
@@ -201,10 +213,22 @@ export async function POST(req: NextRequest) {
           for (const toolUse of toolUseBlocks) {
             sse.sendStatus(`${toolUse.name} を実行中...`);
 
-            const result = await executeTool(
-              toolUse.name,
-              toolUse.input as Record<string, unknown>
-            );
+            // 修正前
+            // const result = await executeTool(
+            //   toolUse.name,
+            //   toolUse.input as Record<string, unknown>,
+            // );
+
+            // マージしたツールを使う
+            const result =
+              (await executeSkill(
+                toolUse.name,
+                toolUse.input as Record<string, unknown>,
+              )) ??
+              (await executeTool(
+                toolUse.name,
+                toolUse.input as Record<string, unknown>,
+              ));
 
             toolResults.push({
               type: "tool_result",
@@ -224,7 +248,7 @@ export async function POST(req: NextRequest) {
             model: MODEL,
             max_tokens: 2048,
             system: SYSTEM_PROMPT,
-            tools: TOOLS,
+            tools: ALL_TOOLS, // ← ここもマージしたツールに差し替え
             messages: conversationMessages,
           });
         }

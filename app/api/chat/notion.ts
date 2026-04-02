@@ -85,7 +85,7 @@ export async function executeTool(
         const result = await createTask(toolInput as CreateTaskInput);
         return JSON.stringify(result);
       }
-      case "get_events": {
+      case "get-events": {
         const result = await getEvents(
           toolInput as { date?: string; days?: number }
         );

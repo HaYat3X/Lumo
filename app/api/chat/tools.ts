@@ -41,28 +41,26 @@ export const TOOLS: Anthropic.Tool[] = [
       required: ["title"],
     },
   },
-  {
-    name: "get_events",
-    description: `Googleカレンダーから予定を取得する。
-「今日の予定は？」「明日の予定を教えて」「今週の予定」などスケジュール確認の意図を示した場合に使用する。
-日付を省略した場合は今日の予定を取得する。`,
-    input_schema: {
-      type: "object" as const,
-      properties: {
-        date: {
-          type: "string",
-          description:
-            "取得したい日付（YYYY-MM-DD形式）。省略時は今日。",
-        },
-        days: {
-          type: "number",
-          description:
-            "何日分取得するか。デフォルト1。「今週」なら7。",
-        },
-      },
-      required: [],
-    },
-  },
+  //   {
+  //     name: "get_events",
+  //     description: `Googleカレンダーから予定を取得する。
+  // 「今日の予定は？」「明日の予定を教えて」「今週の予定」などスケジュール確認の意図を示した場合に使用する。
+  // 日付を省略した場合は今日の予定を取得する。`,
+  //     input_schema: {
+  //       type: "object" as const,
+  //       properties: {
+  //         date: {
+  //           type: "string",
+  //           description: "取得したい日付（YYYY-MM-DD形式）。省略時は今日。",
+  //         },
+  //         days: {
+  //           type: "number",
+  //           description: "何日分取得するか。デフォルト1。「今週」なら7。",
+  //         },
+  //       },
+  //       required: [],
+  //     },
+  //   },
   {
     name: "create_event",
     description: `Googleカレンダーに新しい予定を登録する。
@@ -77,7 +75,8 @@ export const TOOLS: Anthropic.Tool[] = [
         },
         date: {
           type: "string",
-          description: "日付（YYYY-MM-DD形式、必須）。「明日」「来週月曜」などは適切な日付に変換する。",
+          description:
+            "日付（YYYY-MM-DD形式、必須）。「明日」「来週月曜」などは適切な日付に変換する。",
         },
         start_time: {
           type: "string",
