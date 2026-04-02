@@ -12,7 +12,7 @@ const TIMEZONE = "Asia/Tokyo";
 /* ──────────────────────────────────────────
    型定義
    ────────────────────────────────────────── */
-type CreateEventInput = {
+export type CreateEventInput = {
   title: string;
   date: string;
   start_time: string;

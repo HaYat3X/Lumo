@@ -3,12 +3,20 @@
    ────────────────────────────────────────── */
 import { createTaskSkill } from "./create-task";
 import { createTask } from "./create-task/script";
+
 import { getEventsSkill } from "./get-events";
 import { getEvents } from "./get-events/script";
+
 import { createEventSkill } from "./create-event";
 import { createEvent } from "./create-event/script";
+
+import { queryNotionDatabaseSkill } from "./query-notion-database";
+import { queryNotionDatabase } from "./query-notion-database/script";
+
 import type Anthropic from "@anthropic-ai/sdk";
 import type { CreateTaskInput } from "./create-task/script";
+import type { CreateEventInput } from "./create-event/script";
+import type { QueryInput } from "./query-notion-database/script";
 
 /* ──────────────────────────────────────────
    SKILLSリスト
@@ -17,6 +25,7 @@ export const SKILLS: Anthropic.Tool[] = [
   createTaskSkill,
   getEventsSkill,
   createEventSkill,
+  queryNotionDatabaseSkill,
 ];
 
 /* ──────────────────────────────────────────
@@ -41,15 +50,11 @@ export async function executeSkill(
       return JSON.stringify(result);
     }
     case "create-event": {
-      const result = await createEvent(
-        toolInput as {
-          title: string;
-          date: string;
-          start_time: string;
-          end_time: string;
-          description?: string;
-        },
-      );
+      const result = await createEvent(toolInput as CreateEventInput);
+      return JSON.stringify(result);
+    }
+    case "query-notion-database": {
+      const result = await queryNotionDatabase(toolInput as QueryInput);
       return JSON.stringify(result);
     }
     default:

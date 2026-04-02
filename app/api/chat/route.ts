@@ -1,13 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest } from "next/server";
-import { TOOLS } from "./tools";
 import { executeTool } from "./notion";
-
-// SKILLSフォルダから読み込み
 import { SKILLS, executeSkill } from "@/skills";
-
-// SKILLSと既存TOOLSをマージ
-const ALL_TOOLS = [...SKILLS];
 
 /* ──────────────────────────────────────────
    Config
@@ -15,7 +9,7 @@ const ALL_TOOLS = [...SKILLS];
 const MAX_CONTEXT_MESSAGES = 10;
 // const MODEL = "claude-sonnet-4-20250514";
 const MODEL = "claude-haiku-4-5-20251001";
-
+const ALL_TOOLS = [...SKILLS];
 const SYSTEM_PROMPT = `あなたは「Luno」という名前のAI秘書です。
 ユーザーの個人的なスケジュール管理・タスク管理・メモ作成をサポートしつつ、
 知的な相談相手としてもユーザーを支援します。
@@ -58,7 +52,7 @@ const SYSTEM_PROMPT = `あなたは「Luno」という名前のAI秘書です。
 - create_daily_plan: デイリープラン一括登録
 
 ## タスク登録のルール
-- ユーザーがタスク追加の意図を示したら create_task ツールを使う
+- ユーザーがタスク追加の意図を示したら create-task ツールを使う
 - 優先度や種類をユーザーが指定しない場合はデフォルト値を使う（確認しなくてよい）
 - 登録完了後は「登録しました」と結果を簡潔に伝える
 
@@ -158,14 +152,6 @@ export async function POST(req: NextRequest) {
           content: msg.content,
         }));
 
-        // カスタムツール使用前
-        // let response = await client.messages.create({
-        //   model: MODEL,
-        //   max_tokens: 1024,
-        //   system: SYSTEM_PROMPT,
-        //   tools: TOOLS,
-        //   messages: apiMessages,
-        // });
         // Step1の呼び出し
         let response = await client.messages.create({
           model: MODEL,
@@ -212,12 +198,6 @@ export async function POST(req: NextRequest) {
           const toolResults: Anthropic.ToolResultBlockParam[] = [];
           for (const toolUse of toolUseBlocks) {
             sse.sendStatus(`${toolUse.name} を実行中...`);
-
-            // 修正前
-            // const result = await executeTool(
-            //   toolUse.name,
-            //   toolUse.input as Record<string, unknown>,
-            // );
 
             // マージしたツールを使う
             const result =
