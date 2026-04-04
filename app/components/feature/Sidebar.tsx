@@ -47,6 +47,7 @@ const MAIN_NAV: NavItem[] = [
   { href: "/daily", icon: Clock, label: "行動プラン" },
   { href: "/scraps", icon: TowelRack, label: "スクラップ" },
   { href: "/trends", icon: TrendingUp, label: "トレンド" },
+  { href: "/zenn", icon: BookOpen, label: "Zenn" },
 ];
 
 const SERVICE_NAV: NavItem[] = [

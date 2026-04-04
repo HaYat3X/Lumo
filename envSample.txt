@@ -84,3 +84,11 @@ ALLOWED_EMAILS=h
 
 # ログイン許可
 ALLOWED_EMAILS=
+
+# GitHub (Zennリポジトリ)
+GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
+GITHUB_OWNER=your-github-username
+GITHUB_REPO=your-zenn-repo-name
+
+# フロントエンドからZennのURLを組み立てるために必要
+NEXT_PUBLIC_GITHUB_OWNER=your-github-username

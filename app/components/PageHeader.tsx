@@ -129,6 +129,7 @@ import {
   TowelRack,
   TrendingUp,
   ListChecks,
+  BookOpen
 } from "lucide-react";
 import { NotificationBell } from "./NotificationPanel/NotificationPanel";
 
@@ -156,6 +157,7 @@ const PAGE_META: Record<string, PageMeta> = {
     subtitle: "今週の最新トレンド",
     icon: TrendingUp,
   },
+  "/zenn": { title: "Zenn", subtitle: "ブログ記事の管理・公開", icon: BookOpen },
 };
 
 function getToday() {
