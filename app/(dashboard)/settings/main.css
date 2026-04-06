@@ -276,6 +276,9 @@
   font-family: "JetBrains Mono", "Monaco", monospace;
   line-height: 1.6;
   color: var(--color-text-secondary);
+  width: 100%;
+  min-height: 280px;
+  box-sizing: border-box;
 }
 
 .settings-textarea-wrapper {

@@ -391,9 +391,7 @@ export default function SettingsPage() {
       {/* ── Footer ── */}
       <div className="settings-footer animate-fade-up">
         <button
-          className={`settings-btn settings-btn-primary${
-            isSaving ? " loading" : ""
-          }`}
+          className={`settings-tab-btn${isSaving ? " loading" : ""}`}
           onClick={handleSave}
           disabled={isSaving}
         >
@@ -404,7 +402,7 @@ export default function SettingsPage() {
             </>
           ) : (
             <>
-              <Save size={16} />
+              <Save size={12} />
               設定を保存
             </>
           )}
