@@ -252,8 +252,6 @@ export default function SettingsPage() {
   const tabs = [
     { id: "basic", label: "基本設定" },
     { id: "prompt", label: "プロンプト" },
-    { id: "notion", label: "Notion連携" },
-    { id: "advanced", label: "詳細設定" },
   ];
 
   return (
@@ -282,7 +280,7 @@ export default function SettingsPage() {
               <div className="settings-card-header">
                 <h2 className="settings-card-title">基本情報</h2>
                 <p className="settings-card-description">
-                  Lumoの基本的な設定を行います
+                  AIアシスタントの基本的な設定を行います
                 </p>
               </div>
 
@@ -335,44 +333,6 @@ export default function SettingsPage() {
                     ))}
                   </div>
                 </FormField>
-
-                <FormField
-                  label="動作モード"
-                  description="コンテキストに応じてプロンプトを自動切り替えするか選択"
-                >
-                  <div className="settings-radio-group">
-                    <label className="settings-radio-option">
-                      <input
-                        type="radio"
-                        name="contextMode"
-                        value="unified"
-                        checked={config.contextMode === "unified"}
-                        onChange={() =>
-                          setConfig({ ...config, contextMode: "unified" })
-                        }
-                      />
-                      <span className="radio-label">統一モード</span>
-                      <span className="radio-desc">
-                        すべてのページで同じ性格を使用
-                      </span>
-                    </label>
-                    <label className="settings-radio-option">
-                      <input
-                        type="radio"
-                        name="contextMode"
-                        value="contextual"
-                        checked={config.contextMode === "contextual"}
-                        onChange={() =>
-                          setConfig({ ...config, contextMode: "contextual" })
-                        }
-                      />
-                      <span className="radio-label">コンテキスト対応</span>
-                      <span className="radio-desc">
-                        ページごとに性格を動的に切り替え
-                      </span>
-                    </label>
-                  </div>
-                </FormField>
               </div>
             </div>
           </div>
@@ -385,14 +345,14 @@ export default function SettingsPage() {
               <div className="settings-card-header">
                 <h2 className="settings-card-title">システムプロンプト</h2>
                 <p className="settings-card-description">
-                  Lumoの基本的な性格と振る舞いを定義するプロンプトです
+                  AIアシスタントの基本的な性格と振る舞いを定義するプロンプトです
                 </p>
               </div>
 
               <div className="settings-card-body">
                 <FormField
                   label="プロンプト"
-                  description="Lumoの性格、会話スタイル、行動ガイドラインを記述してください"
+                  description="AIアシスタントの性格、会話スタイル、行動ガイドラインを記述してください"
                   required
                 >
                   <div className="settings-textarea-wrapper">
@@ -403,7 +363,7 @@ export default function SettingsPage() {
                         setConfig({ ...config, systemPrompt: e.target.value })
                       }
                       placeholder={`例：
-あなたはLumoというAIアシスタントです。ユーザーははやてくんです。
+あなたはLunoというAIアシスタントです。
 
 【性格】
 親しみやすい男性らしい口調で、友達のように会話してください。
@@ -423,226 +383,6 @@ export default function SettingsPage() {
                       rows={12}
                     />
                   </div>
-                </FormField>
-
-                <div className="settings-form-hint">
-                  <p>
-                    💡
-                    プロンプトのヒント：Lumoがどんなコンテキストで使われるか（チャット、デイリープラン、タスク管理など）を念頭に置いて作成することで、より効果的になります。
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ═══ Notion Tab ═══ */}
-        {activeTab === "notion" && (
-          <div className="settings-tab-content animate-fade-up">
-            <div className="settings-card">
-              <div className="settings-card-header">
-                <h2 className="settings-card-title">Notion連携</h2>
-                <p className="settings-card-description">
-                  Notionデータベースへのアクセスを設定します
-                </p>
-              </div>
-
-              <div className="settings-card-body">
-                <div className="settings-notion-info">
-                  <AlertCircle size={18} />
-                  <div>
-                    <p className="notion-info-title">
-                      Notion Integration をセットアップしましょう
-                    </p>
-                    <p className="notion-info-text">
-                      <a
-                        href="https://www.notion.so/my-integrations"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Notion Integrations
-                      </a>
-                      でインテグレーションを作成し、トークンを取得してください。
-                    </p>
-                  </div>
-                </div>
-
-                <FormField
-                  label="Integration Token"
-                  description="Notion APIの認証トークン（秘密鍵）"
-                  required
-                >
-                  <div className="settings-secret-input">
-                    <input
-                      type="password"
-                      className="settings-input"
-                      value={config.notionIntegrationToken}
-                      onChange={(e) =>
-                        setConfig({
-                          ...config,
-                          notionIntegrationToken: e.target.value,
-                        })
-                      }
-                      placeholder="secret_xxxxxxxxxxxxxxxxxxxxxxxx"
-                    />
-                    {config.notionIntegrationToken && (
-                      <button
-                        className="settings-secret-toggle"
-                        onClick={() => {
-                          const input = document.querySelector(
-                            'input[placeholder="secret_xxxxxxxxxxxxxxxxxxxxxxxx"]',
-                          ) as HTMLInputElement;
-                          if (input) {
-                            input.type =
-                              input.type === "password" ? "text" : "password";
-                          }
-                        }}
-                      >
-                        👁️
-                      </button>
-                    )}
-                  </div>
-                </FormField>
-
-                <FormField
-                  label="Database ID"
-                  description="NotionのデータベースURL から32文字のIDを抽出"
-                  required
-                >
-                  <div className="settings-database-input">
-                    <input
-                      type="text"
-                      className="settings-input"
-                      value={config.notionDatabaseId}
-                      onChange={(e) =>
-                        setConfig({
-                          ...config,
-                          notionDatabaseId: e.target.value,
-                        })
-                      }
-                      placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                    />
-                    {config.notionDatabaseId && (
-                      <button
-                        className="settings-copy-btn"
-                        onClick={() => copy(config.notionDatabaseId)}
-                        title="コピー"
-                      >
-                        {copied ? <Check size={14} /> : <Copy size={14} />}
-                      </button>
-                    )}
-                  </div>
-                </FormField>
-
-                {/* Notion Test Button */}
-                <div className="settings-form-action">
-                  <button
-                    className={`settings-btn settings-btn-secondary${
-                      notionTestStatus.loading ? " loading" : ""
-                    }`}
-                    onClick={handleTestNotion}
-                    disabled={
-                      notionTestStatus.loading ||
-                      !config.notionIntegrationToken ||
-                      !config.notionDatabaseId
-                    }
-                  >
-                    {notionTestStatus.loading ? (
-                      <>
-                        <span className="spinner" />
-                        接続テスト中...
-                      </>
-                    ) : (
-                      "接続テスト"
-                    )}
-                  </button>
-
-                  {notionTestStatus.result && (
-                    <div
-                      className={`settings-test-result ${notionTestStatus.result}`}
-                    >
-                      {notionTestStatus.result === "connected" ? (
-                        <Check size={14} />
-                      ) : (
-                        <AlertCircle size={14} />
-                      )}
-                      <span>{notionTestStatus.message}</span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="settings-form-hint">
-                  <p>
-                    💡 Database ID の取得方法：Notion でデータベースを開き、URL
-                    内の {"{"}database_id{"}"} 部分（32文字）をコピーします。
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ═══ Advanced Tab ═══ */}
-        {activeTab === "advanced" && (
-          <div className="settings-tab-content animate-fade-up">
-            <div className="settings-card">
-              <div className="settings-card-header">
-                <h2 className="settings-card-title">詳細設定</h2>
-                <p className="settings-card-description">
-                  APIレスポンスの詳細パラメータを調整します
-                </p>
-              </div>
-
-              <div className="settings-card-body">
-                <FormField
-                  label="Temperature"
-                  description="0.0（確定的）～ 1.0（創発的）の値を設定"
-                >
-                  <div className="settings-slider-group">
-                    <input
-                      type="range"
-                      min="0"
-                      max="1"
-                      step="0.1"
-                      value={config.temperature}
-                      onChange={(e) =>
-                        setConfig({
-                          ...config,
-                          temperature: parseFloat(e.target.value),
-                        })
-                      }
-                      className="settings-slider"
-                    />
-                    <span className="settings-slider-value">
-                      {config.temperature.toFixed(1)}
-                    </span>
-                  </div>
-                  <p className="settings-slider-hint">
-                    推奨値: 0.7（バランス型）
-                  </p>
-                </FormField>
-
-                <FormField
-                  label="Max Tokens"
-                  description="1回のレスポンスで生成される最大トークン数"
-                >
-                  <input
-                    type="number"
-                    className="settings-input"
-                    value={config.maxTokens}
-                    onChange={(e) =>
-                      setConfig({
-                        ...config,
-                        maxTokens: Math.max(100, parseInt(e.target.value) || 0),
-                      })
-                    }
-                    min="100"
-                    max="4096"
-                    step="100"
-                  />
-                  <p className="settings-input-hint">
-                    範囲: 100～4096 | 推奨: 2000
-                  </p>
                 </FormField>
               </div>
             </div>
