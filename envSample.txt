@@ -28,7 +28,7 @@ NOTION_OKR_DB_ID=
 # KR（主要成果）DB
 NOTION_KR_DB_ID=
 # 設定DB
-NOTION_ST_DB_ID=32ffab19d2958096a550e84061bd7e08
+NOTION_ST_DB_ID=
 
 # --- データソース ID (DS_ID) ---
 # タスク管理データソース
