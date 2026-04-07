@@ -254,6 +254,11 @@
   gap: 0;
   padding: 0 0 2px;
   animation: fadeUp 0.45s ease-out both;
+  z-index: 1;
+}
+
+.timeline-item:hover {
+  z-index: 10;
 }
 
 .timeline-item:last-child {
@@ -371,10 +376,9 @@
 
 .timeline-card:hover {
   border-color: var(--color-border-hover);
-  /* rgba(0,0,0,.12) */
   background: #ffffff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
-  transform: translateY(-1px);
+  /* transform: translateY(-1px); */
 }
 
 .timeline-card:active {
